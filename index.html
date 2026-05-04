@@ -24,8 +24,6 @@
   --green2:     #00c85a;
   --red:        #ff4757;
   --red2:       #cc3344;
-  --orange:     #ff9f1c;
-  --purple:     #7c5cbf;
   --gold:       #ffd700;
   --mono:       'Space Mono', monospace;
   --sans:       'DM Sans', sans-serif;
@@ -88,8 +86,8 @@ main { position:relative; z-index:1; }
 .section-sub { font-size: 12px; color: var(--text3); }
 
 select.date-select {
-  background: var(--bg2); border: 1px solid var(--border); color: var(--text);
-  font-family: var(--mono); font-size: 13px; padding: 4px 12px; border-radius: var(--r); outline:none;
+  background: var(--bg2); border: 1px solid var(--border); color: var(--accent);
+  font-family: var(--mono); font-size: 13px; padding: 6px 12px; border-radius: var(--r); outline:none; cursor:pointer;
 }
 
 /* ===== STAT CARDS ===== */
@@ -99,10 +97,9 @@ select.date-select {
 .stat-value { font-family: var(--mono); font-size: 22px; font-weight:700; color: var(--text); }
 .stat-value.green { color: var(--green); }
 .stat-value.red { color: var(--red); }
-.stat-value.accent { color: var(--accent); }
 
 /* ===== TABLE ===== */
-.table-wrap { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r2); overflow: hidden; }
+.table-wrap { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r2); overflow: hidden; margin-bottom: 24px;}
 .table-toolbar { display:flex; align-items:center; gap:12px; padding: 12px 16px; border-bottom: 1px solid var(--border); background: var(--bg3); }
 .search-box { flex:1; max-width:240px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--r); padding: 6px 12px; font-family:var(--sans); font-size:13px; color:var(--text); outline:none; }
 .toolbar-right { margin-left:auto; font-size:12px; color:var(--text3); font-family:var(--mono); }
@@ -124,6 +121,7 @@ td.num { text-align:right; font-family:var(--mono); font-size:12px; }
 .rank-mid { background: var(--bg3); color:var(--text3); }
 
 .ticker-chip { display:inline-flex; align-items:center; gap:6px; font-weight:600; font-size:13px; }
+.ticker-dot { width:6px; height:6px; border-radius:50%; background: var(--green2); }
 .mom-bar-wrap { display:flex; align-items:center; gap:8px; }
 .mom-bar { flex:1; height:4px; border-radius:2px; background: var(--bg3); max-width:80px; overflow:hidden; }
 .mom-bar-fill { height:100%; border-radius:2px; }
@@ -142,30 +140,30 @@ td.num { text-align:right; font-family:var(--mono); font-size:12px; }
 .run-btn { padding: 10px 28px; border-radius: var(--r); border: none; cursor:pointer; font-family:var(--mono); font-size:13px; font-weight:700; letter-spacing:1px; text-transform:uppercase; background: linear-gradient(135deg, var(--accent2), var(--accent)); color: var(--bg); margin-left:auto; align-self:flex-end; box-shadow: 0 0 16px rgba(0,212,255,0.2); }
 .run-btn:hover { transform:translateY(-1px); box-shadow: 0 0 24px rgba(0,212,255,0.35); }
 
-/* ===== CHART ===== */
+/* ===== CHART & RESULTS ===== */
 .chart-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r2); padding: 20px; margin-bottom: 24px; }
 .chart-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
 .chart-title { font-family:var(--mono); font-size:12px; color:var(--text2); letter-spacing:1px; }
 .chart-container { position:relative; height:400px; }
 
 /* ===== GIANT MATRIX TABLE ===== */
-.matrix-wrap { overflow:auto; max-height:600px; }
-.matrix-table { table-layout:fixed; width: max-content; border-spacing: 0;}
-.matrix-table th { min-width: 65px; text-align:center; padding: 6px; font-size:10px;}
-.matrix-table th:first-child { min-width:90px; position:sticky; left:0; z-index:20; background:var(--bg2); border-right:1px solid var(--border);}
-.matrix-table td { padding: 4px; font-family:var(--mono); font-size:10px; text-align:center; border: 1px solid var(--border); }
-.matrix-table td:first-child { position:sticky; left:0; z-index:10; background:var(--bg2); border-right:1px solid var(--border); font-weight:bold; color:var(--text2);}
-.cell-top5 { border: 2px solid var(--gold) !important; color: var(--gold); font-weight: bold; background: rgba(255,215,0,0.05); }
-.cell-pos { color: var(--green); background: rgba(0,230,118,0.05); }
-.cell-neg { color: var(--red); background: rgba(255,71,87,0.05); }
-.cell-out { background: var(--bg3); color: transparent; } /* Non-constituents */
+.matrix-wrap { overflow:auto; max-height:600px; padding-bottom: 12px;}
+.matrix-table { table-layout:fixed; width: max-content; border-collapse: collapse; }
+.matrix-table th { width: 70px; text-align:right; padding: 8px; font-size:11px; background: var(--bg3); border: 1px solid var(--border); position:sticky; top:0; z-index:11;}
+.matrix-table th:first-child { width:90px; text-align:center; left:0; z-index:12; border-right:2px solid var(--border2);}
+.matrix-table td { padding: 6px; font-family:var(--mono); font-size:11px; text-align:right; border: 1px solid var(--border); }
+.matrix-table td:first-child { position:sticky; left:0; z-index:10; background:var(--bg3); border-right:2px solid var(--border2); font-weight:bold; color:var(--text2); text-align:center;}
+.cell-top5 { border: 2px solid var(--gold) !important; color: var(--gold) !important; font-weight: bold; background: rgba(255,215,0,0.08); }
+.cell-pos { color: var(--green); }
+.cell-neg { color: var(--red); }
+.cell-out { background: var(--border); color: #4a5568; text-align:center !important; font-size:14px;}
 
 /* ===== TABS ===== */
-.tab-bar { display:flex; gap:0; border-bottom: 1px solid var(--border); overflow-x:auto; }
+.tab-bar { display:flex; gap:0; border-bottom: 1px solid var(--border); overflow-x:auto; background:var(--bg3); }
 .tab-btn { padding: 12px 20px; background:none; border:none; font-family:var(--mono); font-size:12px; color:var(--text3); cursor:pointer; border-bottom: 2px solid transparent; transition: all 0.15s; white-space:nowrap; }
 .tab-btn:hover { color:var(--text); }
-.tab-btn.active { color:var(--accent); border-bottom-color:var(--accent); font-weight:700;}
-.tab-panel { display:none; padding:16px 0;}
+.tab-btn.active { color:var(--accent); border-bottom-color:var(--accent); font-weight:700; background: rgba(0,212,255,0.05);}
+.tab-panel { display:none; padding:0;}
 .tab-panel.active { display:block; }
 
 /* ===== LOADING ===== */
@@ -190,8 +188,8 @@ td.num { text-align:right; font-family:var(--mono); font-size:12px; }
 <header>
   <div class="logo">NDX<span>/</span>100 <span>MOMENTUM LAB V2</span></div>
   <nav>
-    <button class="active" onclick="showPage('momentum')">📊 動能排名</button>
-    <button onclick="showPage('backtest')">🔁 回測分析</button>
+    <button class="active" onclick="showPage('momentum')">📊 歷史動能排名</button>
+    <button onclick="showPage('backtest')">🔁 多重參數回測</button>
   </nav>
 </header>
 
@@ -202,16 +200,19 @@ td.num { text-align:right; font-family:var(--mono); font-size:12px; }
 <div class="container">
 
   <div class="section-header">
-    <span class="section-title">// 動能排名檢視</span>
-    <span class="section-sub">僅顯示當期成份股</span>
-    <div style="margin-left:auto;">
+    <div>
+      <span class="section-title">// 動能排名檢視</span>
+      <div class="section-sub">已自動過濾，僅顯示選擇月份之 NASDAQ 100 成份股</div>
+    </div>
+    <div style="margin-left:auto; display:flex; align-items:center; gap:12px;">
+      <span style="font-family:var(--mono); font-size:11px; color:var(--text3);">選擇資料基準日：</span>
       <select id="dateSelect" class="date-select" onchange="computeMomentumRanking()"></select>
     </div>
   </div>
 
   <div class="stat-row" id="momentumStats">
     <div class="stat-card">
-      <div class="stat-label">成份股數</div>
+      <div class="stat-label">符合資格之成份股</div>
       <div class="stat-value" id="statCount">—</div>
     </div>
     <div class="stat-card">
@@ -259,7 +260,7 @@ td.num { text-align:right; font-family:var(--mono); font-size:12px; }
 
   <div class="section-header">
     <span class="section-title">// 策略回測與參數比較</span>
-    <span class="section-sub">支援多重參數疊加比較</span>
+    <span class="section-sub">支援多重週期疊加比較，並可檢視特定策略明細</span>
   </div>
 
   <div class="controls-row">
@@ -307,7 +308,7 @@ td.num { text-align:right; font-family:var(--mono); font-size:12px; }
     
     <div class="chart-card">
       <div class="chart-header">
-        <span class="chart-title">// 總資產成長曲線比較 (初始資金: $10,000 USD)</span>
+        <span class="chart-title">// 總資產成長曲線比較 (初始資金: $100,000 USD)</span>
       </div>
       <div class="chart-container">
         <canvas id="growthChart"></canvas>
@@ -318,7 +319,11 @@ td.num { text-align:right; font-family:var(--mono); font-size:12px; }
     <div class="table-wrap">
       <div class="tab-bar">
         <button class="tab-btn active" onclick="switchTab(0,this)">回測績效總覽</button>
-        <button class="tab-btn" onclick="switchTab(1,this)">全股票歷史動能矩陣 (60日)</button>
+        <button class="tab-btn" onclick="switchTab(1,this)">全股票歷史動能矩陣</button>
+        <button class="tab-btn" onclick="switchTab(2,this)">調倉記錄</button>
+        <button class="tab-btn" onclick="switchTab(3,this)">交易明細</button>
+        <button class="tab-btn" onclick="switchTab(4,this)">月度資產</button>
+        <button class="tab-btn" onclick="switchTab(5,this)">QQQ 月度</button>
       </div>
       
       <!-- Tab 0: Summary Table -->
@@ -342,13 +347,74 @@ td.num { text-align:right; font-family:var(--mono); font-size:12px; }
 
       <!-- Tab 1: Matrix Heatmap -->
       <div class="tab-panel" id="tabPanel1">
-        <div style="padding:0 16px 12px; font-size:12px; color:var(--text2);">
-          * 僅顯示在該月份屬於 NDX100 的成份股。<br>
-          * 數值為 60日動能(%)。 <span style="color:var(--gold); border:1px solid var(--gold); padding:1px 4px; border-radius:3px;">金框</span> 表示當期前5名，
-          <span style="color:var(--green)">綠字</span> 為正動能，<span style="color:var(--red)">紅字</span> 為負動能。非成份股以深灰底隱藏。
+        <div style="padding:16px; font-size:12px; color:var(--text2); background:var(--bg2);">
+          * 數值為該月基準之 60日動能(%)。<br>
+          * 僅顯示在該月份屬於 NDX100 的成份股。 <span style="color:var(--gold); border:1px solid var(--gold); padding:1px 4px; border-radius:3px; margin:0 4px;">金框</span> 表示當期動能前5名。<br>
+          * <span style="color:var(--text3); font-weight:bold; background:var(--border); padding:1px 6px;">-</span> 灰底減號代表該股票當期被<strong>排除在成份股外</strong>，不參與排名與計算。
         </div>
         <div class="matrix-wrap" id="matrixContainer">
           <!-- Rendered async -->
+        </div>
+      </div>
+
+      <!-- Tab 2~4 require strategy selection -->
+      <div id="detailSections" style="display:none;">
+        <div style="padding:16px; border-bottom:1px solid var(--border); background:var(--bg2); display:flex; align-items:center; gap:12px;">
+          <span style="font-family:var(--mono); font-size:11px; color:var(--text3);">選擇檢視策略明細：</span>
+          <select id="detailStratSelect" class="control-select" onchange="renderDetailTables()"></select>
+        </div>
+
+        <div class="tab-panel" id="tabPanel2">
+          <div style="overflow:auto; max-height:400px;">
+            <table>
+              <thead><tr>
+                <th>日期</th><th>前置排名 (動能)</th>
+                <th class="num">現金(USD)</th><th class="num">股票市值</th><th class="num">總資產(USD)</th><th class="num">當月成長</th>
+              </tr></thead>
+              <tbody id="rebalBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="tab-panel" id="tabPanel3">
+          <div style="padding:12px 16px; font-size:11px; color:var(--text2); background:var(--bg2);">
+            * 淨金額計算方式：買入時為 -(金額+手續費)，賣出時為 +(金額-手續費)
+          </div>
+          <div style="overflow:auto; max-height:400px;">
+            <table>
+              <thead><tr>
+                <th>日期</th><th>動作</th><th>標的</th>
+                <th class="num">動能</th><th class="num">成交價</th><th class="num">股數</th>
+                <th class="num">金額(USD)</th><th class="num">手續費</th><th class="num">淨金額</th>
+              </tr></thead>
+              <tbody id="tradesBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="tab-panel" id="tabPanel4">
+          <div style="overflow:auto; max-height:400px;">
+            <table>
+              <thead><tr>
+                <th>日期</th><th>持有標的</th>
+                <th class="num">現金(USD)</th><th class="num">股票市值</th><th class="num">總資產(USD)</th><th class="num">累積報酬</th>
+              </tr></thead>
+              <tbody id="monthlyBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 5: QQQ -->
+      <div class="tab-panel" id="tabPanel5">
+        <div style="overflow:auto; max-height:400px;">
+          <table>
+            <thead><tr>
+              <th>日期</th>
+              <th class="num">總資產(USD)</th><th class="num">累積報酬</th>
+            </tr></thead>
+            <tbody id="qqqBody"></tbody>
+          </table>
         </div>
       </div>
 
@@ -371,10 +437,11 @@ let sortCol = 'rank';
 let sortDir = 1;
 let growthChart = null;
 
-// Palette for chart lines
+let backtestResultsData = [];
+let qqqResultData = null;
+
 const CHART_COLORS = ['#00d4ff', '#00e676', '#ff9f1c', '#7c5cbf', '#ff4757', '#ffd700', '#ff00ff', '#00ffcc'];
 
-// Initialization
 async function init() {
   try {
     const [histRes, memRes] = await Promise.all([
@@ -384,12 +451,10 @@ async function init() {
     HIST = await histRes.json();
     MEMBERSHIP = await memRes.json();
 
-    // Populate Date Dropdown
     const dateSelect = document.getElementById('dateSelect');
-    // Iterate backwards so newest is first
     for(let i = HIST.dates.length - 1; i >= 0; i--) {
       let opt = document.createElement('option');
-      opt.value = i;
+      opt.value = i; 
       opt.textContent = HIST.dates[i];
       dateSelect.appendChild(opt);
     }
@@ -400,16 +465,13 @@ async function init() {
   }
 }
 
-// Helper: Is ticker in index at dateIdx?
+// 嚴格判斷是否為當期成分股
 function isInIdx(ticker, dateIdx) {
   const mem = MEMBERSHIP[ticker];
   if (!mem) return false;
-  // strict match: only if it is explicitly in the index this month
-  // (using +/- 1 tolerance in case of data alignment, but strict is better)
-  return mem.includes(dateIdx) || mem.includes(dateIdx-1); 
+  return mem.includes(Number(dateIdx)); 
 }
 
-// Helper: Get past date index
 function getPastIdx(dateIdx, days) {
   const target = new Date(HIST.dates[dateIdx]);
   target.setDate(target.getDate() - days);
@@ -438,19 +500,25 @@ function switchTab(idx, btn) {
   document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
   btn.classList.add('active');
   document.getElementById('tabPanel' + idx).classList.add('active');
+  
+  if (idx >= 2 && idx <= 4) {
+    document.getElementById('detailSections').style.display = 'block';
+  } else {
+    document.getElementById('detailSections').style.display = 'none';
+  }
 }
 
 // ==========================================
 // PAGE 1: MOMENTUM RANKING
 // ==========================================
 function computeMomentumRanking() {
-  const dateIdx = parseInt(document.getElementById('dateSelect').value);
+  const dateIdx = Number(document.getElementById('dateSelect').value);
   const idx60 = getPastIdx(dateIdx, 60);
   
   momentumData = [];
   
   for (const ticker of HIST.tickers) {
-    // REQUIREMENT 1: Only current constituents
+    // 需求一修正：嚴格過濾掉非當前成份股
     if (!isInIdx(ticker, dateIdx)) continue;
     
     const curP = HIST.prices[ticker][dateIdx];
@@ -462,11 +530,9 @@ function computeMomentumRanking() {
     momentumData.push({ ticker, curP, p60, mom });
   }
 
-  // Sort and Rank
   momentumData.sort((a, b) => b.mom - a.mom);
   momentumData.forEach((d, i) => d.rank = i + 1);
 
-  // Stats
   const moms = momentumData.map(d => d.mom);
   const posCount = moms.filter(v => v > 0).length;
 
@@ -485,7 +551,6 @@ function renderMomentumTable() {
   let data = momentumData.slice();
   if (search) data = data.filter(d => d.ticker.toLowerCase().includes(search));
 
-  // Sort logic
   const dirs = {
     rank: (a,b) => a.rank - b.rank,
     ticker: (a,b) => a.ticker.localeCompare(b.ticker),
@@ -507,7 +572,7 @@ function renderMomentumTable() {
 
     html += `<tr>
       <td><span class="rank-badge ${rankCls}">${d.rank}</span></td>
-      <td><span class="ticker-chip"><span class="ticker-dot in-index"></span><strong>${d.ticker}</strong></span></td>
+      <td><span class="ticker-chip"><span class="ticker-dot"></span><strong>${d.ticker}</strong></span></td>
       <td class="num">$${d.curP.toFixed(2)}</td>
       <td class="num" style="color:var(--text3)">$${d.p60.toFixed(2)}</td>
       <td class="num" style="color:${momColor};font-weight:700">${(d.mom>=0?'+':'')+d.mom.toFixed(2)}%</td>
@@ -524,13 +589,13 @@ function renderMomentumTable() {
 function sortTable(col) {
   if (sortCol === col) sortDir *= -1;
   else { sortCol = col; sortDir = 1; }
-  document.querySelectorAll('thead th').forEach(th => th.classList.remove('sorted'));
+  document.querySelectorAll('#momentumTable thead th').forEach(th => th.classList.remove('sorted'));
   event.currentTarget.classList.add('sorted');
   renderMomentumTable();
 }
 
 // ==========================================
-// PAGE 2: BACKTEST ENGINE (MULTI-PARAM)
+// PAGE 2: BACKTEST ENGINE
 // ==========================================
 function runBacktest() {
   const freqs = Array.from(document.querySelectorAll('#freqGroup input:checked')).map(el => el.value);
@@ -543,36 +608,33 @@ function runBacktest() {
 
   const nPos = parseInt(document.getElementById('posSelect').value);
   const comm = parseFloat(document.getElementById('commSelect').value);
-  const capitalUSD = 10000; // Fixed initial for comparison
+  const capitalUSD = 100000; 
 
-  setLoading(true, '執行多重回測中…');
+  setLoading(true, '執行多重參數回測中…');
 
-  // Use setTimeout to allow UI to render loading spinner
   setTimeout(() => {
     try {
-      const results = [];
+      backtestResultsData = [];
       let colorIdx = 0;
 
-      // Cross product of parameters
       for(const f of freqs) {
         for(const mw of momWins) {
           const res = executeSingleBacktest(f, nPos, mw, capitalUSD, comm);
           res.label = `[${f}] ${mw}天動能 (Top${nPos})`;
           res.color = CHART_COLORS[colorIdx % CHART_COLORS.length];
-          results.push(res);
+          res.id = colorIdx;
+          backtestResultsData.push(res);
           colorIdx++;
         }
       }
 
-      // Add QQQ baseline
-      const qqqRes = backtestQQQ(capitalUSD);
-      qqqRes.label = 'QQQ Buy & Hold';
-      qqqRes.color = 'rgba(255, 255, 255, 0.6)';
-      results.push(qqqRes);
+      qqqResultData = backtestQQQ(capitalUSD);
+      qqqResultData.label = 'QQQ Buy & Hold';
+      qqqResultData.color = 'rgba(255, 255, 255, 0.6)';
 
-      renderBacktestResults(results);
+      renderBacktestResults();
       
-      // Render the giant matrix (async to prevent freezing)
+      // 非同步渲染巨型矩陣，避免 UI 卡頓
       setTimeout(renderGiantMatrix, 10);
       
     } catch(e) {
@@ -586,7 +648,6 @@ function runBacktest() {
 function executeSingleBacktest(freq, nPos, momWin, capitalUSD, comm) {
   const n = HIST.dates.length;
   
-  // Build rebalance dates
   const rebalSet = new Set();
   let lastRebal = null;
   const freqMonths = freq === 'M' ? 1 : (freq === 'Q' ? 3 : 6);
@@ -601,6 +662,8 @@ function executeSingleBacktest(freq, nPos, momWin, capitalUSD, comm) {
   let cash = capitalUSD;
   let portfolio = {}; 
   const monthlyHistory = [];
+  const rebalHistory = [];
+  const tradeLog = [];
   let totalComm = 0;
   let peak = capitalUSD;
   let maxDD = 0;
@@ -611,7 +674,8 @@ function executeSingleBacktest(freq, nPos, momWin, capitalUSD, comm) {
       const momScores = [];
       
       for (const ticker of HIST.tickers) {
-        if (!isInIdx(ticker, i)) continue; // STRICT CONSTITUENT CHECK
+        // 嚴格篩選當期成份股
+        if (!isInIdx(ticker, i)) continue; 
         const curP = HIST.prices[ticker][i];
         const pastP = HIST.prices[ticker][pastIdx];
         if (curP != null && pastP != null && pastP > 0) {
@@ -628,8 +692,11 @@ function executeSingleBacktest(freq, nPos, momWin, capitalUSD, comm) {
         if (!topTickers.has(ticker)) {
           const p = HIST.prices[ticker][i];
           if (p != null) {
-            cash += (shares * p) - (shares * comm);
-            totalComm += shares * comm;
+            const proceeds = shares * p;
+            const fee = shares * comm;
+            cash += proceeds - fee;
+            totalComm += fee;
+            tradeLog.push({ date: HIST.dates[i], action: 'SELL', ticker, price: p, shares, amount: proceeds, fee, mom: null });
           }
           delete portfolio[ticker];
         }
@@ -640,7 +707,7 @@ function executeSingleBacktest(freq, nPos, momWin, capitalUSD, comm) {
       for (const [ticker, shares] of Object.entries(portfolio)) portVal += shares * HIST.prices[ticker][i];
       const target = (cash + portVal) / nPos;
 
-      for (const { ticker, price } of top) {
+      for (const { ticker, mom, price } of top) {
         const curVal = (portfolio[ticker] || 0) * price;
         const need = target - curVal;
         if (need > 0) {
@@ -651,35 +718,56 @@ function executeSingleBacktest(freq, nPos, momWin, capitalUSD, comm) {
             cash -= (cost + fee);
             totalComm += fee;
             portfolio[ticker] = (portfolio[ticker] || 0) + sharesToBuy;
+            tradeLog.push({ date: HIST.dates[i], action: 'BUY', ticker, price, shares: sharesToBuy, amount: cost, fee, mom: mom * 100 });
           }
         }
       }
+
+      // Record Rebal
+      let pv = 0;
+      for (const [ticker, shares] of Object.entries(portfolio)) pv += shares * HIST.prices[ticker][i];
+      const tot = cash + pv;
+      const grw = (tot / capitalUSD - 1) * 100;
+      rebalHistory.push({
+        date: HIST.dates[i],
+        top5: top.map(x => `${x.ticker}(${(x.mom*100).toFixed(1)}%)`).join(', '),
+        cash: cash, portVal: pv, total: tot, growth: grw
+      });
     }
 
     // Snapshot
     let pv = 0;
+    const holdingsArr = [];
     for (const [ticker, shares] of Object.entries(portfolio)) {
-      if (HIST.prices[ticker][i] != null) pv += shares * HIST.prices[ticker][i];
+      if (HIST.prices[ticker][i] != null) {
+        pv += shares * HIST.prices[ticker][i];
+        holdingsArr.push(ticker);
+      }
     }
     const total = cash + pv;
     if (total > peak) peak = total;
     const dd = (total - peak) / peak * 100;
     if (dd < maxDD) maxDD = dd;
     
-    monthlyHistory.push(total);
+    monthlyHistory.push({
+      date: HIST.dates[i],
+      cash, portVal: pv, total,
+      growth: (total / capitalUSD - 1) * 100,
+      holdings: holdingsArr.join(', ')
+    });
   }
 
-  const finalUSD = monthlyHistory[n - 1];
+  const finalUSD = monthlyHistory[n - 1].total;
   const totalReturn = (finalUSD / capitalUSD - 1) * 100;
   const annReturn = (Math.pow(finalUSD / capitalUSD, 12 / n) - 1) * 100;
 
-  return { monthlyData: monthlyHistory, finalUSD, totalReturn, annReturn, maxDD, totalComm };
+  return { monthly: monthlyHistory, rebal: rebalHistory, trades: tradeLog, finalUSD, totalReturn, annReturn, maxDD, totalComm };
 }
 
 function backtestQQQ(capitalUSD) {
   const qqq = HIST.qqq;
   const shares = capitalUSD / qqq[0];
-  const monthlyData = [];
+  const monthly = [];
   let peak = capitalUSD;
   let maxDD = 0;
 
@@ -688,29 +776,29 @@ function backtestQQQ(capitalUSD) {
     if (total > peak) peak = total;
     const dd = (total - peak) / peak * 100;
     if (dd < maxDD) maxDD = dd;
-    monthlyData.push(total);
+    monthly.push({
+      date: HIST.dates[i], total, growth: (total / capitalUSD - 1) * 100
+    });
   }
 
-  const finalUSD = monthlyData[monthlyData.length - 1];
+  const finalUSD = monthly[monthly.length - 1].total;
   return { 
-    monthlyData, finalUSD, 
+    monthly, finalUSD, 
     totalReturn: (finalUSD / capitalUSD - 1) * 100, 
     annReturn: (Math.pow(finalUSD / capitalUSD, 12 / qqq.length) - 1) * 100,
     maxDD, totalComm: 0 
   };
 }
 
-function renderBacktestResults(results) {
+function renderBacktestResults() {
   document.getElementById('backtestResults').style.display = 'block';
 
-  // 1. Render Summary Table
-  let html = '';
-  results.sort((a,b) => b.totalReturn - a.totalReturn); // Sort by best performance
+  // Sort by best return
+  const sortedRes = [...backtestResultsData].sort((a,b) => b.totalReturn - a.totalReturn);
   
-  for(const r of results) {
-    const isBaseline = r.label.includes('QQQ');
-    const rowStyle = isBaseline ? 'background:rgba(255,255,255,0.05); font-weight:bold;' : '';
-    html += `<tr style="${rowStyle}">
+  let html = '';
+  for(const r of sortedRes) {
+    html += `<tr>
       <td><span style="display:inline-block;width:10px;height:10px;background:${r.color};margin-right:8px;border-radius:2px;"></span>${r.label}</td>
       <td class="num">$${r.finalUSD.toLocaleString('en',{maximumFractionDigits:0})}</td>
       <td class="num" style="color:${r.totalReturn>=0?'var(--green)':'var(--red)'}">${r.totalReturn.toFixed(1)}%</td>
@@ -719,28 +807,35 @@ function renderBacktestResults(results) {
       <td class="num">$${r.totalComm.toFixed(0)}</td>
     </tr>`;
   }
+  // Baseline QQQ
+  html += `<tr style="background:rgba(255,255,255,0.05); font-weight:bold;">
+    <td><span style="display:inline-block;width:10px;height:10px;background:${qqqResultData.color};margin-right:8px;border-radius:2px;"></span>${qqqResultData.label}</td>
+    <td class="num">$${qqqResultData.finalUSD.toLocaleString('en',{maximumFractionDigits:0})}</td>
+    <td class="num" style="color:${qqqResultData.totalReturn>=0?'var(--green)':'var(--red)'}">${qqqResultData.totalReturn.toFixed(1)}%</td>
+    <td class="num">${qqqResultData.annReturn.toFixed(1)}%</td>
+    <td class="num" style="color:var(--red)">${qqqResultData.maxDD.toFixed(1)}%</td>
+    <td class="num">$0</td>
+  </tr>`;
   document.getElementById('summaryBody').innerHTML = html;
 
-  // 2. Render Chart
-  const datasets = results.map(r => ({
-    label: r.label,
-    data: r.monthlyData.map(v => +v.toFixed(0)),
-    borderColor: r.color,
-    borderWidth: r.label.includes('QQQ') ? 1.5 : 2,
-    borderDash: r.label.includes('QQQ') ? [4,4] : [],
-    pointRadius: 0,
-    tension: 0.2
+  // Render Chart
+  const datasets = backtestResultsData.map(r => ({
+    label: r.label, data: r.monthly.map(v => +v.total.toFixed(0)),
+    borderColor: r.color, borderWidth: 2, pointRadius: 0, tension: 0.2
   }));
+  datasets.push({
+    label: qqqResultData.label, data: qqqResultData.monthly.map(v => +v.total.toFixed(0)),
+    borderColor: qqqResultData.color, borderWidth: 1.5, borderDash: [4,4], pointRadius: 0, tension: 0.2
+  });
 
   if (growthChart) growthChart.destroy();
   growthChart = new Chart(document.getElementById('growthChart'), {
-    type: 'line',
-    data: { labels: HIST.dates, datasets },
+    type: 'line', data: { labels: HIST.dates, datasets },
     options: {
       responsive: true, maintainAspectRatio: false,
       interaction: { mode: 'index', intersect: false },
       plugins: {
-        legend: { labels: { color: '#8b96a8', font:{family:"'Space Mono'"} } },
+        legend: { labels: { color: '#8b96a8', font:{family:"'Space Mono'", size:11} } },
         tooltip: {
           backgroundColor: 'rgba(15,18,23,0.95)', borderColor: 'rgba(30,37,48,1)', borderWidth: 1,
           titleFont: { family: "'Space Mono'" }, bodyFont: { family: "'Space Mono'" },
@@ -753,44 +848,94 @@ function renderBacktestResults(results) {
       }
     }
   });
+
+  // Render Detail Selector
+  const detailSelect = document.getElementById('detailStratSelect');
+  detailSelect.innerHTML = backtestResultsData.map(r => `<option value="${r.id}">${r.label}</option>`).join('');
+  renderDetailTables();
+
+  // Render QQQ Detail Tab
+  document.getElementById('qqqBody').innerHTML = qqqResultData.monthly.map((m, i) => {
+    const bg = i % 2 === 0 ? 'background:rgba(255,255,255,0.02)' : '';
+    const gc = m.growth >= 0 ? 'var(--green)' : 'var(--red)';
+    return `<tr style="${bg}"><td>${m.date}</td><td class="num">$${m.total.toFixed(2)}</td>
+      <td class="num" style="color:${gc};font-weight:700">${m.growth>=0?'+':''}${m.growth.toFixed(2)}%</td></tr>`;
+  }).join('');
+}
+
+function renderDetailTables() {
+  const stratId = parseInt(document.getElementById('detailStratSelect').value);
+  const strat = backtestResultsData.find(r => r.id === stratId);
+  if(!strat) return;
+
+  // 調倉記錄
+  document.getElementById('rebalBody').innerHTML = strat.rebal.map((r, i) => {
+    const bg = i % 2 === 0 ? 'background:rgba(255,255,255,0.02)' : '';
+    const gc = r.growth >= 0 ? 'var(--green)' : 'var(--red)';
+    return `<tr style="${bg}"><td>${r.date}</td><td style="font-size:11px;color:var(--text2)">${r.top5}</td>
+      <td class="num">$${r.cash.toFixed(2)}</td><td class="num">$${r.portVal.toFixed(2)}</td>
+      <td class="num">$${r.total.toFixed(2)}</td>
+      <td class="num" style="color:${gc};font-weight:700">${r.growth>=0?'+':''}${r.growth.toFixed(2)}%</td></tr>`;
+  }).join('');
+
+  // 交易明細
+  document.getElementById('tradesBody').innerHTML = strat.trades.map(t => {
+    const isBuy = t.action === 'BUY';
+    const bg = isBuy ? 'rgba(0,230,118,0.04)' : 'rgba(255,71,87,0.04)';
+    const ac = isBuy ? 'var(--green)' : 'var(--red)';
+    const momStr = t.mom != null ? `${t.mom.toFixed(2)}%` : '—';
+    return `<tr style="background:${bg}"><td>${t.date}</td>
+      <td style="color:${ac};font-weight:700;font-family:var(--mono)">${t.action}</td>
+      <td style="font-weight:600">${t.ticker}</td><td class="num">${momStr}</td>
+      <td class="num">$${t.price.toFixed(2)}</td><td class="num">${t.shares.toFixed(4)}</td>
+      <td class="num">$${t.amount.toFixed(2)}</td><td class="num" style="color:var(--red2)">$${t.fee.toFixed(2)}</td>
+      <td class="num" style="color:${isBuy?'var(--red)':'var(--green)'}">${isBuy?'-':'+'}$${(isBuy?t.amount+t.fee:t.amount-t.fee).toFixed(2)}</td></tr>`;
+  }).join('');
+
+  // 月度資產
+  document.getElementById('monthlyBody').innerHTML = strat.monthly.map((m, i) => {
+    const bg = i % 2 === 0 ? 'background:rgba(255,255,255,0.02)' : '';
+    const gc = m.growth >= 0 ? 'var(--green)' : 'var(--red)';
+    return `<tr style="${bg}"><td>${m.date}</td><td style="font-size:11px;color:var(--text3)">${m.holdings}</td>
+      <td class="num">$${m.cash.toFixed(2)}</td><td class="num">$${m.portVal.toFixed(2)}</td>
+      <td class="num">$${m.total.toFixed(2)}</td>
+      <td class="num" style="color:${gc};font-weight:700">${m.growth>=0?'+':''}${m.growth.toFixed(2)}%</td></tr>`;
+  }).join('');
 }
 
 // ==========================================
 // GIANT MATRIX RENDERER (PERFORMANCE OPTIMIZED)
 // ==========================================
 function renderGiantMatrix() {
-  // To avoid UI freeze, we construct a giant HTML string and inject it.
   const dates = HIST.dates;
   const tickers = HIST.tickers;
   const n = dates.length;
   
-  // Pre-calculate the entire matrix string
-  let html = '<table class="matrix-table"><thead><tr><th>Date</th>';
+  // High-performance string concatenation
+  let html = '<table class="matrix-table"><thead><tr><th>Month</th>';
   for(const t of tickers) html += `<th>${t}</th>`;
   html += '</tr></thead><tbody>';
 
-  // We loop dates backward (newest first)
-  for(let i = n - 1; i >= 60; i--) { // need at least 60 days back (approx 2 idx)
+  // Render from newest to oldest
+  for(let i = n - 1; i >= 60; i--) { 
     html += `<tr><td>${dates[i].substring(0,7)}</td>`;
     
-    const pastIdx = getPastIdx(i, 60);
+    const pastIdx = getPastIdx(i, 60); // Matrix is fixed to 60-day momentum
     
-    // Find top 5 for this row to highlight
+    // Find top 5
     let rowScores = [];
     for(let j=0; j<tickers.length; j++) {
       const t = tickers[j];
       if(isInIdx(t, i)) {
         const cp = HIST.prices[t][i];
         const pp = HIST.prices[t][pastIdx];
-        if(cp != null && pp != null && pp > 0) {
-          rowScores.push({ idx: j, mom: cp/pp - 1 });
-        }
+        if(cp != null && pp != null && pp > 0) rowScores.push({ idx: j, mom: cp/pp - 1 });
       }
     }
     rowScores.sort((a,b) => b.mom - a.mom);
     const top5Set = new Set(rowScores.slice(0,5).map(x => x.idx));
 
-    // Build row cells
+    // Cells
     for(let j=0; j<tickers.length; j++) {
       const t = tickers[j];
       if(!isInIdx(t, i)) {
@@ -815,7 +960,6 @@ function renderGiantMatrix() {
   document.getElementById('matrixContainer').innerHTML = html;
 }
 
-// Boot
 init();
 </script>
 </body>
