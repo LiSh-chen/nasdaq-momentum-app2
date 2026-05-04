@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NDX100 Momentum Lab</title>
+<title>NDX100 Momentum Lab V2</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -31,8 +31,6 @@
   --sans:       'DM Sans', sans-serif;
   --r:          6px;
   --r2:         12px;
-  --shadow:     0 4px 24px rgba(0,0,0,0.4);
-  --glow:       0 0 20px rgba(0,212,255,0.15);
 }
 
 * { margin:0; padding:0; box-sizing:border-box; }
@@ -47,501 +45,154 @@ body {
   overflow-x: hidden;
 }
 
-/* Grid overlay */
 body::before {
-  content:'';
-  position:fixed; inset:0;
-  background-image:
-    linear-gradient(rgba(0,212,255,0.02) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0,212,255,0.02) 1px, transparent 1px);
-  background-size: 40px 40px;
-  pointer-events:none; z-index:0;
+  content:''; position:fixed; inset:0;
+  background-image: linear-gradient(rgba(0,212,255,0.02) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(0,212,255,0.02) 1px, transparent 1px);
+  background-size: 40px 40px; pointer-events:none; z-index:0;
 }
 
 /* ===== HEADER ===== */
 header {
   position: sticky; top:0; z-index:100;
-  background: rgba(10,12,16,0.92);
-  backdrop-filter: blur(20px);
+  background: rgba(10,12,16,0.92); backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--border);
-  padding: 0 32px;
-  display: flex; align-items:center; gap:32px;
-  height: 56px;
+  padding: 0 32px; display: flex; align-items:center; gap:32px; height: 56px;
 }
-
-.logo {
-  font-family: var(--mono);
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--accent);
-  letter-spacing: 1px;
-  white-space: nowrap;
-}
+.logo { font-family: var(--mono); font-size: 15px; font-weight: 700; color: var(--accent); letter-spacing: 1px; }
 .logo span { color: var(--text3); font-weight:400; }
 
 nav { display:flex; gap:4px; flex:1; }
 nav button {
-  background: none; border: none;
-  padding: 6px 16px;
-  border-radius: var(--r);
-  font-family: var(--sans); font-size: 13px;
-  color: var(--text2); cursor: pointer;
-  transition: all 0.15s;
-  white-space: nowrap;
+  background: none; border: none; padding: 6px 16px; border-radius: var(--r);
+  font-family: var(--sans); font-size: 13px; color: var(--text2); cursor: pointer;
+  transition: all 0.15s; white-space: nowrap;
 }
 nav button:hover { color: var(--text); background: var(--bg3); }
-nav button.active {
-  color: var(--accent); background: rgba(0,212,255,0.08);
-  font-weight:500;
-}
+nav button.active { color: var(--accent); background: rgba(0,212,255,0.08); font-weight:500; }
 
-.header-status {
-  display:flex; align-items:center; gap:8px;
-  font-family:var(--mono); font-size:11px; color:var(--text3);
-  white-space:nowrap;
-}
-.status-dot {
-  width:6px; height:6px; border-radius:50%;
-  background: var(--green);
-  box-shadow: 0 0 6px var(--green);
-  animation: pulse 2s infinite;
-}
+.header-status { display:flex; align-items:center; gap:8px; font-family:var(--mono); font-size:11px; color:var(--text3); }
+.status-dot { width:6px; height:6px; border-radius:50%; background: var(--green); box-shadow: 0 0 6px var(--green); animation: pulse 2s infinite; }
 @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
 
-/* ===== MAIN LAYOUT ===== */
+/* ===== MAIN ===== */
 main { position:relative; z-index:1; }
-
 .page { display:none; animation: fadeIn 0.2s ease; }
 .page.active { display:block; }
 @keyframes fadeIn { from{opacity:0;transform:translateY(4px)} to{opacity:1;transform:none} }
-
 .container { max-width:1400px; margin:0 auto; padding:24px 32px; }
 
 /* ===== SECTION HEADER ===== */
-.section-header {
-  display:flex; align-items:baseline; gap:16px;
-  margin-bottom: 20px;
-}
-.section-title {
-  font-family: var(--mono);
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--accent);
-  letter-spacing: 2px;
-  text-transform: uppercase;
-}
-.section-sub {
-  font-size: 12px; color: var(--text3);
+.section-header { display:flex; align-items:center; gap:16px; margin-bottom: 20px; flex-wrap:wrap;}
+.section-title { font-family: var(--mono); font-size: 13px; font-weight: 700; color: var(--accent); letter-spacing: 2px; text-transform: uppercase; }
+.section-sub { font-size: 12px; color: var(--text3); }
+
+select.date-select {
+  background: var(--bg2); border: 1px solid var(--border); color: var(--text);
+  font-family: var(--mono); font-size: 13px; padding: 4px 12px; border-radius: var(--r); outline:none;
 }
 
 /* ===== STAT CARDS ===== */
-.stat-row {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 12px;
-  margin-bottom: 24px;
-}
-.stat-card {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: var(--r2);
-  padding: 16px 18px;
-  transition: border-color 0.2s;
-}
-.stat-card:hover { border-color: var(--border2); }
-.stat-label {
-  font-size: 11px; color: var(--text3);
-  font-family: var(--mono); letter-spacing:1px;
-  margin-bottom:6px; text-transform:uppercase;
-}
-.stat-value {
-  font-family: var(--mono); font-size: 22px;
-  font-weight:700; color: var(--text);
-}
+.stat-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 24px; }
+.stat-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r2); padding: 16px 18px; }
+.stat-label { font-size: 11px; color: var(--text3); font-family: var(--mono); letter-spacing:1px; margin-bottom:6px; text-transform:uppercase; }
+.stat-value { font-family: var(--mono); font-size: 22px; font-weight:700; color: var(--text); }
 .stat-value.green { color: var(--green); }
 .stat-value.red { color: var(--red); }
 .stat-value.accent { color: var(--accent); }
-.stat-sub { font-size:11px; color:var(--text3); margin-top:3px; }
 
 /* ===== TABLE ===== */
-.table-wrap {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: var(--r2);
-  overflow: hidden;
-}
-.table-toolbar {
-  display:flex; align-items:center; gap:12px;
-  padding: 12px 16px;
-  border-bottom: 1px solid var(--border);
-  background: var(--bg3);
-}
-.search-box {
-  flex:1; max-width:240px;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: var(--r);
-  padding: 6px 12px;
-  font-family:var(--sans); font-size:13px; color:var(--text);
-  outline:none;
-  transition: border-color 0.15s;
-}
-.search-box:focus { border-color: var(--accent2); }
-.search-box::placeholder { color: var(--text3); }
-
-.pill-group { display:flex; gap:4px; }
-.pill {
-  padding: 4px 12px;
-  border-radius: 99px;
-  border: 1px solid var(--border);
-  font-size:12px; font-family:var(--mono);
-  background:none; color:var(--text3); cursor:pointer;
-  transition: all 0.15s;
-}
-.pill:hover { border-color: var(--border2); color:var(--text); }
-.pill.active {
-  background: rgba(0,212,255,0.1);
-  border-color: var(--accent2);
-  color: var(--accent);
-}
-
+.table-wrap { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r2); overflow: hidden; }
+.table-toolbar { display:flex; align-items:center; gap:12px; padding: 12px 16px; border-bottom: 1px solid var(--border); background: var(--bg3); }
+.search-box { flex:1; max-width:240px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--r); padding: 6px 12px; font-family:var(--sans); font-size:13px; color:var(--text); outline:none; }
 .toolbar-right { margin-left:auto; font-size:12px; color:var(--text3); font-family:var(--mono); }
 
-table {
-  width:100%; border-collapse:collapse;
-}
-thead th {
-  padding: 10px 14px;
-  text-align:left;
-  font-family:var(--mono); font-size:11px;
-  color:var(--text3); letter-spacing:1px;
-  border-bottom: 1px solid var(--border);
-  white-space:nowrap;
-  cursor:pointer; user-select:none;
-  background: var(--bg3);
-}
-thead th:hover { color:var(--text); }
+table { width:100%; border-collapse:collapse; }
+thead th { padding: 10px 14px; text-align:left; font-family:var(--mono); font-size:11px; color:var(--text3); letter-spacing:1px; border-bottom: 1px solid var(--border); white-space:nowrap; cursor:pointer; background: var(--bg3); position:sticky; top:0; z-index:10;}
 thead th.sorted { color:var(--accent); }
 thead th.num { text-align:right; }
-
-tbody tr {
-  border-bottom: 1px solid rgba(30,37,48,0.6);
-  transition: background 0.1s;
-}
+tbody tr { border-bottom: 1px solid rgba(30,37,48,0.6); }
 tbody tr:hover { background: rgba(255,255,255,0.025); }
-tbody tr:last-child { border-bottom:none; }
-
-td {
-  padding: 9px 14px;
-  font-size: 13px;
-}
+td { padding: 9px 14px; font-size: 13px; }
 td.num { text-align:right; font-family:var(--mono); font-size:12px; }
 
-.rank-badge {
-  display:inline-flex; align-items:center; justify-content:center;
-  width:24px; height:24px;
-  border-radius:50%;
-  font-family:var(--mono); font-size:11px; font-weight:700;
-}
+.rank-badge { display:inline-flex; align-items:center; justify-content:center; width:24px; height:24px; border-radius:50%; font-family:var(--mono); font-size:11px; font-weight:700; }
 .rank-1 { background: rgba(255,215,0,0.15); color:var(--gold); }
 .rank-2 { background: rgba(192,192,192,0.15); color:#c0c0c0; }
 .rank-3 { background: rgba(205,127,50,0.15); color:#cd7f32; }
 .rank-top { background: rgba(0,230,118,0.1); color:var(--green); }
 .rank-mid { background: var(--bg3); color:var(--text3); }
 
-.ticker-chip {
-  display:inline-flex; align-items:center;
-  gap:6px; font-weight:600; font-size:13px;
-}
-.ticker-dot {
-  width:6px; height:6px; border-radius:50%;
-  background: var(--accent);
-}
-.in-index { background: var(--green2); }
-.out-index { background: var(--red); opacity:0.5; }
+.ticker-chip { display:inline-flex; align-items:center; gap:6px; font-weight:600; font-size:13px; }
+.mom-bar-wrap { display:flex; align-items:center; gap:8px; }
+.mom-bar { flex:1; height:4px; border-radius:2px; background: var(--bg3); max-width:80px; overflow:hidden; }
+.mom-bar-fill { height:100%; border-radius:2px; }
 
-.mom-bar-wrap {
-  display:flex; align-items:center; gap:8px;
-}
-.mom-bar {
-  flex:1; height:4px; border-radius:2px;
-  background: var(--bg3);
-  max-width:80px; overflow:hidden;
-}
-.mom-bar-fill {
-  height:100%; border-radius:2px;
-  transition: width 0.3s ease;
-}
+/* ===== MULTI-SELECT CONTROLS ===== */
+.controls-row { display:flex; flex-wrap:wrap; align-items:flex-start; gap:20px; background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r2); padding: 20px 24px; margin-bottom: 24px; }
+.control-group { display:flex; flex-direction:column; gap:8px; }
+.control-label { font-family:var(--mono); font-size:11px; color:var(--text3); letter-spacing:1px; text-transform:uppercase; font-weight:700;}
+.checkbox-group { display:flex; gap:12px; flex-wrap:wrap; background:var(--bg3); padding:8px 12px; border-radius:var(--r); border:1px solid var(--border);}
+.checkbox-group label { font-size:13px; display:flex; align-items:center; gap:4px; cursor:pointer; color:var(--text2); }
+.checkbox-group label:hover { color:var(--text); }
+.checkbox-group input[type="checkbox"] { accent-color: var(--accent); cursor:pointer;}
 
-.badge-in {
-  display:inline-block; padding:2px 7px;
-  border-radius:99px; font-size:10px; font-family:var(--mono);
-  background:rgba(0,230,118,0.1); color:var(--green2);
-  border: 1px solid rgba(0,200,90,0.3);
-}
-.badge-out {
-  display:inline-block; padding:2px 7px;
-  border-radius:99px; font-size:10px; font-family:var(--mono);
-  background:rgba(255,71,87,0.08); color:var(--red);
-  border: 1px solid rgba(255,71,87,0.2);
-}
+.control-select { background: var(--bg3); border: 1px solid var(--border); border-radius: var(--r); padding: 8px 12px; font-family:var(--sans); font-size:13px; color:var(--text); outline:none; cursor:pointer; min-width:140px; }
 
-/* ===== CONTROLS ===== */
-.controls-row {
-  display:flex; flex-wrap:wrap; align-items:flex-end; gap:16px;
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: var(--r2);
-  padding: 20px 24px;
-  margin-bottom: 24px;
-}
-.control-group { display:flex; flex-direction:column; gap:6px; }
-.control-label {
-  font-family:var(--mono); font-size:10px;
-  color:var(--text3); letter-spacing:1.5px; text-transform:uppercase;
-}
-.control-select {
-  background: var(--bg3);
-  border: 1px solid var(--border);
-  border-radius: var(--r);
-  padding: 8px 12px;
-  font-family:var(--sans); font-size:13px; color:var(--text);
-  outline:none; cursor:pointer;
-  min-width:140px;
-  transition: border-color 0.15s;
-}
-.control-select:focus { border-color: var(--accent2); }
-.control-select option { background: var(--bg3); }
-
-.run-btn {
-  padding: 9px 28px;
-  border-radius: var(--r);
-  border: none; cursor:pointer;
-  font-family:var(--mono); font-size:12px; font-weight:700;
-  letter-spacing:1px; text-transform:uppercase;
-  background: linear-gradient(135deg, var(--accent2), var(--accent));
-  color: var(--bg);
-  transition: all 0.15s;
-  box-shadow: 0 0 16px rgba(0,212,255,0.2);
-  align-self: flex-end;
-}
-.run-btn:hover {
-  transform:translateY(-1px);
-  box-shadow: 0 0 24px rgba(0,212,255,0.35);
-}
-.run-btn:active { transform:none; }
-.run-btn:disabled { opacity:0.5; cursor:not-allowed; transform:none; }
+.run-btn { padding: 10px 28px; border-radius: var(--r); border: none; cursor:pointer; font-family:var(--mono); font-size:13px; font-weight:700; letter-spacing:1px; text-transform:uppercase; background: linear-gradient(135deg, var(--accent2), var(--accent)); color: var(--bg); margin-left:auto; align-self:flex-end; box-shadow: 0 0 16px rgba(0,212,255,0.2); }
+.run-btn:hover { transform:translateY(-1px); box-shadow: 0 0 24px rgba(0,212,255,0.35); }
 
 /* ===== CHART ===== */
-.chart-card {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: var(--r2);
-  padding: 20px;
-  margin-bottom: 24px;
-}
-.chart-header {
-  display:flex; align-items:center; justify-content:space-between;
-  margin-bottom:16px;
-}
-.chart-title {
-  font-family:var(--mono); font-size:12px;
-  color:var(--text2); letter-spacing:1px;
-}
-.chart-legend {
-  display:flex; gap:16px; flex-wrap:wrap;
-}
-.legend-item {
-  display:flex; align-items:center; gap:6px;
-  font-size:11px; color:var(--text2); font-family:var(--mono);
-}
-.legend-dot {
-  width:10px; height:3px; border-radius:2px;
-}
-.chart-container {
-  position:relative; height:360px;
-}
+.chart-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r2); padding: 20px; margin-bottom: 24px; }
+.chart-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
+.chart-title { font-family:var(--mono); font-size:12px; color:var(--text2); letter-spacing:1px; }
+.chart-container { position:relative; height:400px; }
 
-/* ===== RESULTS TABLE ===== */
-.results-grid {
-  display:grid; grid-template-columns: 1fr 1fr;
-  gap:16px; margin-bottom:24px;
-}
-@media(max-width:900px){ .results-grid { grid-template-columns:1fr; } }
+/* ===== GIANT MATRIX TABLE ===== */
+.matrix-wrap { overflow:auto; max-height:600px; }
+.matrix-table { table-layout:fixed; width: max-content; border-spacing: 0;}
+.matrix-table th { min-width: 65px; text-align:center; padding: 6px; font-size:10px;}
+.matrix-table th:first-child { min-width:90px; position:sticky; left:0; z-index:20; background:var(--bg2); border-right:1px solid var(--border);}
+.matrix-table td { padding: 4px; font-family:var(--mono); font-size:10px; text-align:center; border: 1px solid var(--border); }
+.matrix-table td:first-child { position:sticky; left:0; z-index:10; background:var(--bg2); border-right:1px solid var(--border); font-weight:bold; color:var(--text2);}
+.cell-top5 { border: 2px solid var(--gold) !important; color: var(--gold); font-weight: bold; background: rgba(255,215,0,0.05); }
+.cell-pos { color: var(--green); background: rgba(0,230,118,0.05); }
+.cell-neg { color: var(--red); background: rgba(255,71,87,0.05); }
+.cell-out { background: var(--bg3); color: transparent; } /* Non-constituents */
 
-.metric-card {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: var(--r2);
-  padding: 20px;
-}
-.metric-card-title {
-  font-family:var(--mono); font-size:11px; color:var(--text3);
-  letter-spacing:1.5px; text-transform:uppercase; margin-bottom:16px;
-}
-.metric-row {
-  display:flex; justify-content:space-between; align-items:center;
-  padding: 8px 0;
-  border-bottom: 1px solid rgba(30,37,48,0.6);
-  font-size:13px;
-}
-.metric-row:last-child { border-bottom:none; }
-.metric-key { color:var(--text2); }
-.metric-val { font-family:var(--mono); font-weight:700; }
-.metric-val.g { color:var(--green); }
-.metric-val.r { color:var(--red); }
-.metric-val.a { color:var(--accent); }
-
-/* ===== TRADES TABLE ===== */
-.rebal-section {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: var(--r2);
-  overflow:hidden;
-  margin-bottom:24px;
-}
-.rebal-header {
-  display:flex; align-items:center; justify-content:space-between;
-  padding: 14px 18px;
-  background: var(--bg3);
-  border-bottom: 1px solid var(--border);
-}
-.rebal-title { font-family:var(--mono); font-size:12px; color:var(--text2); letter-spacing:1px; }
-.rebal-count { font-family:var(--mono); font-size:11px; color:var(--text3); }
-.rebal-scroll { overflow-x:auto; max-height:400px; overflow-y:auto; }
-
-/* ===== PROGRESS ===== */
-.progress-bar {
-  height:3px; background: var(--bg3);
-  border-radius:2px; overflow:hidden; margin-top:8px;
-}
-.progress-fill {
-  height:100%; border-radius:2px;
-  background: linear-gradient(90deg, var(--accent2), var(--accent));
-  transition: width 0.3s ease;
-}
-
-/* ===== LOADING ===== */
-.loading-overlay {
-  display:none;
-  position:fixed; inset:0;
-  background: rgba(10,12,16,0.85);
-  z-index:200;
-  backdrop-filter:blur(4px);
-  align-items:center; justify-content:center;
-  flex-direction:column; gap:16px;
-}
-.loading-overlay.show { display:flex; }
-.loading-spinner {
-  width:40px; height:40px;
-  border: 2px solid var(--border2);
-  border-top-color: var(--accent);
-  border-radius:50%;
-  animation: spin 0.8s linear infinite;
-}
-@keyframes spin { to{transform:rotate(360deg)} }
-.loading-text { font-family:var(--mono); font-size:13px; color:var(--text2); }
-
-/* ===== ALERT ===== */
-.alert {
-  padding: 12px 16px;
-  border-radius: var(--r);
-  font-size:13px; margin-bottom:16px;
-}
-.alert-info {
-  background: rgba(0,212,255,0.06);
-  border: 1px solid rgba(0,212,255,0.2);
-  color: var(--accent);
-}
-.alert-warn {
-  background: rgba(255,159,28,0.06);
-  border: 1px solid rgba(255,159,28,0.2);
-  color: var(--orange);
-}
-
-/* ===== TOOLTIP ===== */
-.tooltip { position:relative; }
-.tooltip-text {
-  display:none;
-  position:absolute; bottom:calc(100% + 6px); left:50%;
-  transform:translateX(-50%);
-  background: var(--bg3);
-  border: 1px solid var(--border2);
-  border-radius:var(--r);
-  padding:6px 10px;
-  font-size:11px; color:var(--text2); font-family:var(--mono);
-  white-space:nowrap; z-index:50;
-  box-shadow:var(--shadow);
-}
-.tooltip:hover .tooltip-text { display:block; }
-
-/* ===== SCROLLBAR ===== */
-::-webkit-scrollbar { width:6px; height:6px; }
-::-webkit-scrollbar-track { background:var(--bg2); }
-::-webkit-scrollbar-thumb { background:var(--border2); border-radius:3px; }
-::-webkit-scrollbar-thumb:hover { background:#3a4555; }
-
-/* ===== TABS (for backtest detail) ===== */
-.tab-bar {
-  display:flex; gap:0;
-  border-bottom: 1px solid var(--border);
-  margin-bottom:0; overflow-x:auto;
-}
-.tab-btn {
-  padding: 10px 18px;
-  background:none; border:none;
-  font-family:var(--mono); font-size:11px;
-  color:var(--text3); cursor:pointer;
-  border-bottom: 2px solid transparent;
-  transition: all 0.15s;
-  white-space:nowrap;
-  letter-spacing:0.5px;
-}
+/* ===== TABS ===== */
+.tab-bar { display:flex; gap:0; border-bottom: 1px solid var(--border); overflow-x:auto; }
+.tab-btn { padding: 12px 20px; background:none; border:none; font-family:var(--mono); font-size:12px; color:var(--text3); cursor:pointer; border-bottom: 2px solid transparent; transition: all 0.15s; white-space:nowrap; }
 .tab-btn:hover { color:var(--text); }
-.tab-btn.active { color:var(--accent); border-bottom-color:var(--accent); }
-
-.tab-panel { display:none; }
+.tab-btn.active { color:var(--accent); border-bottom-color:var(--accent); font-weight:700;}
+.tab-panel { display:none; padding:16px 0;}
 .tab-panel.active { display:block; }
 
-/* Annotation panel */
-.annotation-box {
-  background: var(--bg3);
-  border-left: 3px solid var(--accent2);
-  border-radius: 0 var(--r) var(--r) 0;
-  padding: 10px 14px;
-  font-size: 12px; color: var(--text2);
-  margin-bottom: 16px;
-  line-height: 1.6;
-}
-.annotation-box strong { color: var(--text); }
+/* ===== LOADING ===== */
+.loading-overlay { display:none; position:fixed; inset:0; background: rgba(10,12,16,0.85); z-index:200; backdrop-filter:blur(4px); align-items:center; justify-content:center; flex-direction:column; gap:16px; }
+.loading-overlay.show { display:flex; }
+.loading-spinner { width:40px; height:40px; border: 2px solid var(--border2); border-top-color: var(--accent); border-radius:50%; animation: spin 0.8s linear infinite; }
+@keyframes spin { to{transform:rotate(360deg)} }
 
-/* ===== RESPONSIVE ===== */
-@media(max-width:768px) {
-  header { padding:0 16px; }
-  .container { padding:16px; }
-  .controls-row { gap:12px; }
-  .stat-row { grid-template-columns: 1fr 1fr; }
-}
+::-webkit-scrollbar { width:8px; height:8px; }
+::-webkit-scrollbar-track { background:var(--bg2); }
+::-webkit-scrollbar-thumb { background:var(--border2); border-radius:4px; }
+::-webkit-scrollbar-thumb:hover { background:#3a4555; }
 </style>
 </head>
 <body>
 
 <div class="loading-overlay" id="loadingOverlay">
   <div class="loading-spinner"></div>
-  <div class="loading-text" id="loadingText">執行回測中…</div>
+  <div class="loading-text" id="loadingText">運算中…</div>
 </div>
 
 <header>
-  <div class="logo">NDX<span>/</span>100 <span>MOMENTUM LAB</span></div>
+  <div class="logo">NDX<span>/</span>100 <span>MOMENTUM LAB V2</span></div>
   <nav>
     <button class="active" onclick="showPage('momentum')">📊 動能排名</button>
     <button onclick="showPage('backtest')">🔁 回測分析</button>
-    <button onclick="showPage('about')">📖 說明</button>
   </nav>
-  <div class="header-status">
-    <div class="status-dot"></div>
-    <span id="lastUpdate">載入中…</span>
-  </div>
 </header>
 
 <main>
@@ -551,30 +202,25 @@ td.num { text-align:right; font-family:var(--mono); font-size:12px; }
 <div class="container">
 
   <div class="section-header">
-    <span class="section-title">// 季動能排名</span>
-    <span class="section-sub">過去60天漲幅 · NASDAQ 100 成份股</span>
+    <span class="section-title">// 動能排名檢視</span>
+    <span class="section-sub">僅顯示當期成份股</span>
+    <div style="margin-left:auto;">
+      <select id="dateSelect" class="date-select" onchange="computeMomentumRanking()"></select>
+    </div>
   </div>
 
   <div class="stat-row" id="momentumStats">
-    <div class="stat-card">
-      <div class="stat-label">DATA DATE</div>
-      <div class="stat-value accent" id="statDate">—</div>
-    </div>
     <div class="stat-card">
       <div class="stat-label">成份股數</div>
       <div class="stat-value" id="statCount">—</div>
     </div>
     <div class="stat-card">
-      <div class="stat-label">最高動能</div>
+      <div class="stat-label">最高動能 (60日)</div>
       <div class="stat-value green" id="statMax">—</div>
     </div>
     <div class="stat-card">
-      <div class="stat-label">最低動能</div>
+      <div class="stat-label">最低動能 (60日)</div>
       <div class="stat-value red" id="statMin">—</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">中位動能</div>
-      <div class="stat-value" id="statMed">—</div>
     </div>
     <div class="stat-card">
       <div class="stat-label">正動能比例</div>
@@ -584,28 +230,19 @@ td.num { text-align:right; font-family:var(--mono); font-size:12px; }
 
   <div class="table-wrap">
     <div class="table-toolbar">
-      <input class="search-box" type="text" id="searchBox" placeholder="搜尋標的…" oninput="filterTable()">
-      <div class="pill-group">
-        <button class="pill active" onclick="filterStatus('all',this)">全部</button>
-        <button class="pill" onclick="filterStatus('top5',this)">前5名</button>
-        <button class="pill" onclick="filterStatus('top20',this)">前20</button>
-        <button class="pill" onclick="filterStatus('positive',this)">正動能</button>
-        <button class="pill" onclick="filterStatus('negative',this)">負動能</button>
-      </div>
+      <input class="search-box" type="text" id="searchBox" placeholder="搜尋標的…" oninput="renderMomentumTable()">
       <div class="toolbar-right" id="tableCount">— 筆</div>
     </div>
-    <div style="overflow-x:auto; max-height:640px; overflow-y:auto;">
+    <div style="overflow-x:auto; max-height:600px; overflow-y:auto;">
       <table id="momentumTable">
         <thead>
           <tr>
             <th onclick="sortTable('rank')" class="sorted">#</th>
             <th onclick="sortTable('ticker')">標的</th>
-            <th onclick="sortTable('status')">狀態</th>
             <th onclick="sortTable('price')" class="num">現價 (USD)</th>
             <th onclick="sortTable('price60')" class="num">60日前 (USD)</th>
             <th onclick="sortTable('mom')" class="num">60日動能</th>
             <th class="num" style="min-width:120px">動能視覺化</th>
-            <th onclick="sortTable('price1m')" class="num">30日漲幅</th>
           </tr>
         </thead>
         <tbody id="momentumBody"></tbody>
@@ -621,19 +258,30 @@ td.num { text-align:right; font-family:var(--mono); font-size:12px; }
 <div class="container">
 
   <div class="section-header">
-    <span class="section-title">// 回測分析</span>
-    <span class="section-sub">歷史動能策略 vs QQQ Buy & Hold</span>
+    <span class="section-title">// 策略回測與參數比較</span>
+    <span class="section-sub">支援多重參數疊加比較</span>
   </div>
 
   <div class="controls-row">
     <div class="control-group">
-      <label class="control-label">再平衡週期</label>
-      <select class="control-select" id="freqSelect">
-        <option value="M">月度 (每月)</option>
-        <option value="Q" selected>季度 (每季)</option>
-        <option value="SA">半年 (每半年)</option>
-      </select>
+      <label class="control-label">再平衡週期 (可多選)</label>
+      <div class="checkbox-group" id="freqGroup">
+        <label><input type="checkbox" value="M"> 月度</label>
+        <label><input type="checkbox" value="Q" checked> 季度</label>
+        <label><input type="checkbox" value="SA"> 半年</label>
+      </div>
     </div>
+    
+    <div class="control-group">
+      <label class="control-label">動能窗口 (可多選)</label>
+      <div class="checkbox-group" id="momWinGroup">
+        <label><input type="checkbox" value="30"> 30天</label>
+        <label><input type="checkbox" value="60" checked> 60天</label>
+        <label><input type="checkbox" value="90"> 90天</label>
+        <label><input type="checkbox" value="120"> 120天</label>
+      </div>
+    </div>
+
     <div class="control-group">
       <label class="control-label">持倉數量</label>
       <select class="control-select" id="posSelect">
@@ -642,127 +290,68 @@ td.num { text-align:right; font-family:var(--mono); font-size:12px; }
         <option value="10">前 10 名</option>
       </select>
     </div>
-    <div class="control-group">
-      <label class="control-label">動能窗口</label>
-      <select class="control-select" id="momWinSelect">
-        <option value="30">30天 (月動能)</option>
-        <option value="60" selected>60天 (季動能)</option>
-        <option value="90">90天</option>
-        <option value="120">120天 (半年)</option>
-      </select>
-    </div>
-    <div class="control-group">
-      <label class="control-label">初始資金 (TWD)</label>
-      <select class="control-select" id="capitalSelect">
-        <option value="200000" selected>NT$200,000</option>
-        <option value="500000">NT$500,000</option>
-        <option value="1000000">NT$1,000,000</option>
-      </select>
-    </div>
+
     <div class="control-group">
       <label class="control-label">手續費/股 (USD)</label>
       <select class="control-select" id="commSelect">
-        <option value="0">$0 (不計)</option>
-        <option value="0.005">$0.005</option>
+        <option value="0">$0</option>
         <option value="0.01">$0.01</option>
         <option value="0.1" selected>$0.10</option>
-        <option value="0.5">$0.50</option>
       </select>
     </div>
-    <div class="control-group">
-      <label class="control-label">匯率 USD/TWD</label>
-      <select class="control-select" id="fxSelect">
-        <option value="30">30</option>
-        <option value="32" selected>32</option>
-        <option value="33">33</option>
-        <option value="35">35</option>
-      </select>
-    </div>
-    <button class="run-btn" onclick="runBacktest()" id="runBtn">▶ 執行回測</button>
+    
+    <button class="run-btn" onclick="runBacktest()">▶ 執行回測比較</button>
   </div>
 
-  <!-- Results -->
   <div id="backtestResults" style="display:none;">
-    <div class="results-grid" id="perfCards"></div>
-
+    
     <div class="chart-card">
       <div class="chart-header">
-        <span class="chart-title">// 總資產成長曲線 (USD)</span>
-        <div class="chart-legend" id="chartLegend"></div>
+        <span class="chart-title">// 總資產成長曲線比較 (初始資金: $10,000 USD)</span>
       </div>
       <div class="chart-container">
         <canvas id="growthChart"></canvas>
       </div>
     </div>
 
-    <div class="chart-card">
-      <div class="chart-header">
-        <span class="chart-title">// 累積報酬率 (%)</span>
-        <div class="chart-legend" id="returnLegend"></div>
-      </div>
-      <div class="chart-container">
-        <canvas id="returnChart"></canvas>
-      </div>
-    </div>
-
     <!-- Detail tabs -->
-    <div class="table-wrap" style="margin-bottom:24px;">
-      <div class="tab-bar" id="detailTabs"></div>
-      <div id="detailPanels"></div>
-    </div>
-  </div>
-
-  <div id="backtestEmpty" class="alert alert-info">
-    設定參數後點擊 <strong>▶ 執行回測</strong> 開始計算。回測使用2007年至今的月度收盤價，並考慮各期的NASDAQ 100成份股變動。
-  </div>
-
-</div>
-</div>
-
-<!-- ===== PAGE 3: ABOUT ===== -->
-<div class="page" id="page-about">
-<div class="container" style="max-width:800px;">
-
-  <div class="section-header">
-    <span class="section-title">// 說明文件</span>
-  </div>
-
-  <div style="display:flex; flex-direction:column; gap:16px;">
-    <div class="metric-card">
-      <div class="metric-card-title">資料來源</div>
-      <div style="font-size:13px; color:var(--text2); line-height:1.8;">
-        <p>· 歷史月度價格：自行整理之 NASDAQ 100 月末收盤價（2007/01 ～ 2026/04）</p>
-        <p>· 成份股變動：依附件 PDF 的加入/剔除紀錄，精確記錄每個時期的指數成份股</p>
-        <p>· 現值資料：使用 Yahoo Finance API（免費公開），顯示最新收盤價</p>
+    <div class="table-wrap">
+      <div class="tab-bar">
+        <button class="tab-btn active" onclick="switchTab(0,this)">回測績效總覽</button>
+        <button class="tab-btn" onclick="switchTab(1,this)">全股票歷史動能矩陣 (60日)</button>
       </div>
-    </div>
-
-    <div class="metric-card">
-      <div class="metric-card-title">動能計算方式</div>
-      <div style="font-size:13px; color:var(--text2); line-height:1.8;">
-        <p>· <strong style="color:var(--text)">60日動能</strong> = (當前月份收盤價 ÷ 60個自然日前最近月份收盤價) - 1</p>
-        <p>· 採用月頻收盤價，非每日數據，故60日約等於2個月</p>
-        <p>· 僅在某標的<strong style="color:var(--text)">被納入 NASDAQ 100 的時期</strong>才參與排名</p>
+      
+      <!-- Tab 0: Summary Table -->
+      <div class="tab-panel active" id="tabPanel0">
+        <div style="overflow-x:auto;">
+          <table style="width:100%;">
+            <thead>
+              <tr>
+                <th>策略名稱</th>
+                <th class="num">最終淨值</th>
+                <th class="num">總報酬率</th>
+                <th class="num">年化報酬率</th>
+                <th class="num">最大回撤</th>
+                <th class="num">總手續費</th>
+              </tr>
+            </thead>
+            <tbody id="summaryBody"></tbody>
+          </table>
+        </div>
       </div>
-    </div>
 
-    <div class="metric-card">
-      <div class="metric-card-title">回測假設</div>
-      <div style="font-size:13px; color:var(--text2); line-height:1.8;">
-        <p>· 以<strong style="color:var(--text)">月末收盤價</strong>作為買賣成交價（無滑點）</p>
-        <p>· 等權重分配（每個部位 = 總資產 ÷ 持倉數）</p>
-        <p>· 手續費：每買賣一股收取固定 USD 費用</p>
-        <p>· 無融資、無做空、無最小股數限制（可買零碎股）</p>
-        <p>· 不考慮股息（純價格報酬）</p>
-        <p>· QQQ B&H：第一期全倉買入並持有至最後，不計手續費</p>
+      <!-- Tab 1: Matrix Heatmap -->
+      <div class="tab-panel" id="tabPanel1">
+        <div style="padding:0 16px 12px; font-size:12px; color:var(--text2);">
+          * 僅顯示在該月份屬於 NDX100 的成份股。<br>
+          * 數值為 60日動能(%)。 <span style="color:var(--gold); border:1px solid var(--gold); padding:1px 4px; border-radius:3px;">金框</span> 表示當期前5名，
+          <span style="color:var(--green)">綠字</span> 為正動能，<span style="color:var(--red)">紅字</span> 為負動能。非成份股以深灰底隱藏。
+        </div>
+        <div class="matrix-wrap" id="matrixContainer">
+          <!-- Rendered async -->
+        </div>
       </div>
-    </div>
 
-    <div class="metric-card">
-      <div class="metric-card-title">免責聲明</div>
-      <div style="font-size:13px; color:var(--text3); line-height:1.8;">
-        本工具僅供教育研究目的，不構成投資建議。歷史績效不代表未來結果。
-      </div>
     </div>
   </div>
 
@@ -773,27 +362,19 @@ td.num { text-align:right; font-family:var(--mono); font-size:12px; }
 
 <script>
 // ==========================================
-// GLOBAL STATE
+// GLOBAL STATE & UTILS
 // ==========================================
-let HIST = null;          // {dates, prices, qqq, tickers}
-let MEMBERSHIP = null;    // {ticker: [dateIndices]}
-let momentumData = [];    // computed for latest date
+let HIST = null;          
+let MEMBERSHIP = null;    
+let momentumData = [];    
 let sortCol = 'rank';
 let sortDir = 1;
-let filterMode = 'all';
 let growthChart = null;
-let returnChart = null;
 
-const COLORS = {
-  M:   '#4472C4',
-  Q:   '#00e676',
-  SA:  '#ff9f1c',
-  QQQ: '#ff4757',
-};
+// Palette for chart lines
+const CHART_COLORS = ['#00d4ff', '#00e676', '#ff9f1c', '#7c5cbf', '#ff4757', '#ffd700', '#ff00ff', '#00ffcc'];
 
-// ==========================================
-// INIT
-// ==========================================
+// Initialization
 async function init() {
   try {
     const [histRes, memRes] = await Promise.all([
@@ -803,112 +384,114 @@ async function init() {
     HIST = await histRes.json();
     MEMBERSHIP = await memRes.json();
 
-    document.getElementById('lastUpdate').textContent =
-      'DATA: ' + HIST.dates[HIST.dates.length - 1];
-
+    // Populate Date Dropdown
+    const dateSelect = document.getElementById('dateSelect');
+    // Iterate backwards so newest is first
+    for(let i = HIST.dates.length - 1; i >= 0; i--) {
+      let opt = document.createElement('option');
+      opt.value = i;
+      opt.textContent = HIST.dates[i];
+      dateSelect.appendChild(opt);
+    }
+    
     computeMomentumRanking();
   } catch(e) {
-    document.getElementById('lastUpdate').textContent = '資料載入失敗';
-    console.error(e);
+    alert('資料載入失敗: ' + e.message);
   }
 }
 
+// Helper: Is ticker in index at dateIdx?
+function isInIdx(ticker, dateIdx) {
+  const mem = MEMBERSHIP[ticker];
+  if (!mem) return false;
+  // strict match: only if it is explicitly in the index this month
+  // (using +/- 1 tolerance in case of data alignment, but strict is better)
+  return mem.includes(dateIdx) || mem.includes(dateIdx-1); 
+}
+
+// Helper: Get past date index
+function getPastIdx(dateIdx, days) {
+  const target = new Date(HIST.dates[dateIdx]);
+  target.setDate(target.getDate() - days);
+  let best = 0;
+  for (let i = dateIdx - 1; i >= 0; i--) {
+    if (new Date(HIST.dates[i]) <= target) { best = i; break; }
+  }
+  return best;
+}
+
+function setLoading(show, text='運算中…') {
+  const ol = document.getElementById('loadingOverlay');
+  document.getElementById('loadingText').textContent = text;
+  ol.classList.toggle('show', show);
+}
+
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+function switchTab(idx, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tabPanel' + idx).classList.add('active');
+}
+
 // ==========================================
-// MOMENTUM RANKING (Page 1)
+// PAGE 1: MOMENTUM RANKING
 // ==========================================
 function computeMomentumRanking() {
-  const dates = HIST.dates;
-  const prices = HIST.prices;
-  const tickers = HIST.tickers;
-  const lastIdx = dates.length - 1;
-  const lastDate = dates[lastIdx];
-
-  // Find index ~60 days back
-  const lastTs = new Date(lastDate);
-  const target60 = new Date(lastTs);
-  target60.setDate(target60.getDate() - 60);
-
-  let idx60 = 0;
-  for (let i = lastIdx - 1; i >= 0; i--) {
-    if (new Date(dates[i]) <= target60) { idx60 = i; break; }
-  }
-
-  // Find index ~30 days back
-  const target30 = new Date(lastTs);
-  target30.setDate(target30.getDate() - 30);
-  let idx30 = 0;
-  for (let i = lastIdx - 1; i >= 0; i--) {
-    if (new Date(dates[i]) <= target30) { idx30 = i; break; }
-  }
-
-  // Helper: is ticker in index at lastIdx?
-  function isInIndex(ticker) {
-    const mem = MEMBERSHIP[ticker];
-    if (!mem) return false;
-    return mem.includes(lastIdx) ||
-           mem.includes(lastIdx - 1) ||
-           mem.includes(lastIdx - 2);
-  }
-
+  const dateIdx = parseInt(document.getElementById('dateSelect').value);
+  const idx60 = getPastIdx(dateIdx, 60);
+  
   momentumData = [];
-  for (const ticker of tickers) {
-    const pArr = prices[ticker];
-    const curP = pArr[lastIdx];
-    const p60  = pArr[idx60];
-    const p30  = pArr[idx30];
-    if (curP == null || p60 == null) continue;
-
+  
+  for (const ticker of HIST.tickers) {
+    // REQUIREMENT 1: Only current constituents
+    if (!isInIdx(ticker, dateIdx)) continue;
+    
+    const curP = HIST.prices[ticker][dateIdx];
+    const p60  = HIST.prices[ticker][idx60];
+    
+    if (curP == null || p60 == null || p60 === 0) continue;
+    
     const mom = (curP / p60 - 1) * 100;
-    const mom30 = p30 != null ? (curP / p30 - 1) * 100 : null;
-    const inIdx = isInIndex(ticker);
-
-    momentumData.push({ ticker, curP, p60, mom, mom30, inIdx });
+    momentumData.push({ ticker, curP, p60, mom });
   }
 
-  // Sort by momentum desc
+  // Sort and Rank
   momentumData.sort((a, b) => b.mom - a.mom);
   momentumData.forEach((d, i) => d.rank = i + 1);
 
   // Stats
-  const inMoms = momentumData.filter(d => d.inIdx).map(d => d.mom);
-  const allMoms = momentumData.map(d => d.mom);
-  const sorted = [...allMoms].sort((a,b)=>a-b);
-  const med = sorted[Math.floor(sorted.length/2)];
-  const posCount = allMoms.filter(v => v > 0).length;
+  const moms = momentumData.map(d => d.mom);
+  const posCount = moms.filter(v => v > 0).length;
 
-  document.getElementById('statDate').textContent = lastDate;
-  document.getElementById('statCount').textContent = momentumData.filter(d=>d.inIdx).length;
-  document.getElementById('statMax').textContent = '+' + Math.max(...inMoms).toFixed(1) + '%';
-  document.getElementById('statMin').textContent = Math.min(...inMoms).toFixed(1) + '%';
-  document.getElementById('statMed').textContent = (med>=0?'+':'') + med.toFixed(1) + '%';
-  document.getElementById('statPos').textContent =
-    Math.round(posCount / allMoms.length * 100) + '%';
+  document.getElementById('statCount').textContent = momentumData.length;
+  document.getElementById('statMax').textContent = moms.length ? '+' + Math.max(...moms).toFixed(1) + '%' : '-';
+  document.getElementById('statMin').textContent = moms.length ? Math.min(...moms).toFixed(1) + '%' : '-';
+  document.getElementById('statPos').textContent = moms.length ? Math.round(posCount / moms.length * 100) + '%' : '-';
 
   renderMomentumTable();
 }
 
 function renderMomentumTable() {
   const search = document.getElementById('searchBox').value.toLowerCase();
-  const maxMom = Math.max(...momentumData.map(d=>Math.abs(d.mom)));
+  const maxMom = momentumData.length ? Math.max(...momentumData.map(d=>Math.abs(d.mom))) : 1;
 
   let data = momentumData.slice();
-
-  // Filter
   if (search) data = data.filter(d => d.ticker.toLowerCase().includes(search));
-  if (filterMode === 'top5')     data = data.filter(d => d.rank <= 5 && d.inIdx);
-  if (filterMode === 'top20')    data = data.filter(d => d.rank <= 20 && d.inIdx);
-  if (filterMode === 'positive') data = data.filter(d => d.mom > 0);
-  if (filterMode === 'negative') data = data.filter(d => d.mom < 0);
 
-  // Sort
+  // Sort logic
   const dirs = {
     rank: (a,b) => a.rank - b.rank,
     ticker: (a,b) => a.ticker.localeCompare(b.ticker),
-    status: (a,b) => (b.inIdx?1:0) - (a.inIdx?1:0),
     price: (a,b) => b.curP - a.curP,
     price60: (a,b) => b.p60 - a.p60,
-    mom: (a,b) => b.mom - a.mom,
-    price1m: (a,b) => (b.mom30||0) - (a.mom30||0),
+    mom: (a,b) => b.mom - a.mom
   };
   if (dirs[sortCol]) data.sort((a,b) => dirs[sortCol](a,b) * sortDir);
 
@@ -921,81 +504,77 @@ function renderMomentumTable() {
     const momColor = d.mom >= 0 ? 'var(--green)' : 'var(--red)';
     const barPct = Math.min(100, Math.abs(d.mom) / maxMom * 100);
     const barColor = d.mom >= 0 ? 'var(--green2)' : 'var(--red2)';
-    const mom30Str = d.mom30 != null
-      ? `<span style="color:${d.mom30>=0?'var(--green)':'var(--red)'}">${(d.mom30>=0?'+':'')+d.mom30.toFixed(2)}%</span>`
-      : '—';
-    const dotCls = d.inIdx ? 'in-index' : 'out-index';
-    const badgeHtml = d.inIdx
-      ? '<span class="badge-in">✓ 成份股</span>'
-      : '<span class="badge-out">剔除</span>';
 
     html += `<tr>
       <td><span class="rank-badge ${rankCls}">${d.rank}</span></td>
-      <td><span class="ticker-chip"><span class="ticker-dot ${dotCls}"></span><strong>${d.ticker}</strong></span></td>
-      <td>${badgeHtml}</td>
+      <td><span class="ticker-chip"><span class="ticker-dot in-index"></span><strong>${d.ticker}</strong></span></td>
       <td class="num">$${d.curP.toFixed(2)}</td>
       <td class="num" style="color:var(--text3)">$${d.p60.toFixed(2)}</td>
       <td class="num" style="color:${momColor};font-weight:700">${(d.mom>=0?'+':'')+d.mom.toFixed(2)}%</td>
       <td>
         <div class="mom-bar-wrap">
-          <div class="mom-bar">
-            <div class="mom-bar-fill" style="width:${barPct}%;background:${barColor}"></div>
-          </div>
+          <div class="mom-bar"><div class="mom-bar-fill" style="width:${barPct}%;background:${barColor}"></div></div>
         </div>
       </td>
-      <td class="num">${mom30Str}</td>
     </tr>`;
   }
   document.getElementById('momentumBody').innerHTML = html;
 }
 
-function filterTable() { renderMomentumTable(); }
-
-function filterStatus(mode, btn) {
-  filterMode = mode;
-  document.querySelectorAll('.pill').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  renderMomentumTable();
-}
-
-let sortDirs = {};
 function sortTable(col) {
-  if (sortCol === col) { sortDir *= -1; }
+  if (sortCol === col) sortDir *= -1;
   else { sortCol = col; sortDir = 1; }
   document.querySelectorAll('thead th').forEach(th => th.classList.remove('sorted'));
+  event.currentTarget.classList.add('sorted');
   renderMomentumTable();
 }
 
 // ==========================================
-// NAVIGATION
-// ==========================================
-function showPage(id) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
-  document.getElementById('page-' + id).classList.add('active');
-  event.target.classList.add('active');
-}
-
-// ==========================================
-// BACKTEST ENGINE
+// PAGE 2: BACKTEST ENGINE (MULTI-PARAM)
 // ==========================================
 function runBacktest() {
-  const freq     = document.getElementById('freqSelect').value;
-  const nPos     = parseInt(document.getElementById('posSelect').value);
-  const momWin   = parseInt(document.getElementById('momWinSelect').value);
-  const capitalTWD = parseFloat(document.getElementById('capitalSelect').value);
-  const comm     = parseFloat(document.getElementById('commSelect').value);
-  const fx       = parseFloat(document.getElementById('fxSelect').value);
+  const freqs = Array.from(document.querySelectorAll('#freqGroup input:checked')).map(el => el.value);
+  const momWins = Array.from(document.querySelectorAll('#momWinGroup input:checked')).map(el => parseInt(el.value));
+  
+  if (freqs.length === 0 || momWins.length === 0) {
+    alert('請至少選擇一種週期與一種動能窗口！');
+    return;
+  }
 
-  const capitalUSD = capitalTWD / fx;
+  const nPos = parseInt(document.getElementById('posSelect').value);
+  const comm = parseFloat(document.getElementById('commSelect').value);
+  const capitalUSD = 10000; // Fixed initial for comparison
 
-  setLoading(true, '正在執行回測…');
+  setLoading(true, '執行多重回測中…');
 
+  // Use setTimeout to allow UI to render loading spinner
   setTimeout(() => {
     try {
-      const result = backtestEngine(freq, nPos, momWin, capitalUSD, comm, fx);
-      const qqq    = backtestQQQ(capitalUSD, fx);
-      renderResults(result, qqq, freq, nPos, momWin, capitalTWD, capitalUSD, comm, fx);
+      const results = [];
+      let colorIdx = 0;
+
+      // Cross product of parameters
+      for(const f of freqs) {
+        for(const mw of momWins) {
+          const res = executeSingleBacktest(f, nPos, mw, capitalUSD, comm);
+          res.label = `[${f}] ${mw}天動能 (Top${nPos})`;
+          res.color = CHART_COLORS[colorIdx % CHART_COLORS.length];
+          results.push(res);
+          colorIdx++;
+        }
+      }
+
+      // Add QQQ baseline
+      const qqqRes = backtestQQQ(capitalUSD);
+      qqqRes.label = 'QQQ Buy & Hold';
+      qqqRes.color = 'rgba(255, 255, 255, 0.6)';
+      results.push(qqqRes);
+
+      renderBacktestResults(results);
+      
+      // Render the giant matrix (async to prevent freezing)
+      setTimeout(renderGiantMatrix, 10);
+      
     } catch(e) {
       alert('回測錯誤：' + e.message);
       console.error(e);
@@ -1004,533 +583,239 @@ function runBacktest() {
   }, 50);
 }
 
-function backtestEngine(freq, nPos, momWin, capitalUSD, comm, fx) {
-  const dates   = HIST.dates;
-  const prices  = HIST.prices;
-  const tickers = HIST.tickers;
-  const n       = dates.length;
-
-  // Build rebalance date indices
-  let rebalIdxs = [];
-  if (freq === 'M') {
-    rebalIdxs = dates.map((_, i) => i);
-  } else {
-    const freqMonths = freq === 'Q' ? 3 : 6;
-    let lastRebal = null;
-    for (let i = 0; i < n; i++) {
-      const d = new Date(dates[i]);
-      if (!lastRebal) { rebalIdxs.push(i); lastRebal = d; continue; }
-      const monthsDiff = (d.getFullYear() - lastRebal.getFullYear()) * 12 +
-                         (d.getMonth() - lastRebal.getMonth());
-      if (monthsDiff >= freqMonths) { rebalIdxs.push(i); lastRebal = d; }
-    }
-  }
-
-  // Helper: is ticker in index at date idx
-  function isInIdx(ticker, dateIdx) {
-    const mem = MEMBERSHIP[ticker];
-    if (!mem) return false;
-    // Check within ±2 months tolerance
-    return mem.some(m => Math.abs(m - dateIdx) <= 2);
-  }
-
-  // Find past date index for momentum window
-  function getPastIdx(dateIdx, days) {
-    const cur = new Date(dates[dateIdx]);
-    const target = new Date(cur);
-    target.setDate(target.getDate() - days);
-    let best = 0;
-    for (let i = dateIdx - 1; i >= 0; i--) {
-      if (new Date(dates[i]) <= target) { best = i; break; }
-    }
-    return best;
+function executeSingleBacktest(freq, nPos, momWin, capitalUSD, comm) {
+  const n = HIST.dates.length;
+  
+  // Build rebalance dates
+  const rebalSet = new Set();
+  let lastRebal = null;
+  const freqMonths = freq === 'M' ? 1 : (freq === 'Q' ? 3 : 6);
+  
+  for (let i = 0; i < n; i++) {
+    const d = new Date(HIST.dates[i]);
+    if (!lastRebal) { rebalSet.add(i); lastRebal = d; continue; }
+    const monthsDiff = (d.getFullYear() - lastRebal.getFullYear()) * 12 + (d.getMonth() - lastRebal.getMonth());
+    if (monthsDiff >= freqMonths) { rebalSet.add(i); lastRebal = d; }
   }
 
   let cash = capitalUSD;
-  let portfolio = {}; // {ticker: shares}
+  let portfolio = {}; 
   const monthlyHistory = [];
-  const rebalHistory = [];
-  const tradeLog = [];
   let totalComm = 0;
-
-  // Main loop - monthly tracking with rebalance at rebalIdxs
-  const rebalSet = new Set(rebalIdxs);
+  let peak = capitalUSD;
+  let maxDD = 0;
 
   for (let i = 0; i < n; i++) {
-    // Rebalance?
     if (rebalSet.has(i)) {
       const pastIdx = getPastIdx(i, momWin);
-
-      // Compute momentum for eligible tickers
       const momScores = [];
-      for (const ticker of tickers) {
-        if (!isInIdx(ticker, i)) continue;
-        const pArr = prices[ticker];
-        const curP = pArr[i];
-        const pastP = pArr[pastIdx];
-        if (curP == null || pastP == null || pastP === 0) continue;
-        momScores.push({ ticker, mom: curP / pastP - 1, price: curP });
+      
+      for (const ticker of HIST.tickers) {
+        if (!isInIdx(ticker, i)) continue; // STRICT CONSTITUENT CHECK
+        const curP = HIST.prices[ticker][i];
+        const pastP = HIST.prices[ticker][pastIdx];
+        if (curP != null && pastP != null && pastP > 0) {
+          momScores.push({ ticker, mom: curP / pastP - 1, price: curP });
+        }
       }
+      
       momScores.sort((a, b) => b.mom - a.mom);
       const top = momScores.slice(0, nPos);
       const topTickers = new Set(top.map(x => x.ticker));
 
-      // Sell positions not in top
+      // SELL
       for (const [ticker, shares] of Object.entries(portfolio)) {
         if (!topTickers.has(ticker)) {
-          const pArr = prices[ticker];
-          const p = pArr[i];
-          if (p == null) continue;
-          const proceeds = shares * p;
-          const fee = shares * comm;
-          cash += proceeds - fee;
-          totalComm += fee;
-          tradeLog.push({
-            dateIdx: i, date: dates[i], action: 'SELL', ticker,
-            price: p, shares, amount: proceeds, fee,
-            mom: null
-          });
+          const p = HIST.prices[ticker][i];
+          if (p != null) {
+            cash += (shares * p) - (shares * comm);
+            totalComm += shares * comm;
+          }
           delete portfolio[ticker];
         }
       }
 
-      // Current port value after sells
+      // BUY
       let portVal = 0;
-      for (const [ticker, shares] of Object.entries(portfolio)) {
-        const p = prices[ticker][i];
-        if (p != null) portVal += shares * p;
-      }
+      for (const [ticker, shares] of Object.entries(portfolio)) portVal += shares * HIST.prices[ticker][i];
       const target = (cash + portVal) / nPos;
 
-      // Buy top positions
-      for (const { ticker, mom, price } of top) {
-        const curShares = portfolio[ticker] || 0;
-        const curVal = curShares * price;
+      for (const { ticker, price } of top) {
+        const curVal = (portfolio[ticker] || 0) * price;
         const need = target - curVal;
-        if (need > 0.01) {
+        if (need > 0) {
           const sharesToBuy = need / price;
           const cost = sharesToBuy * price;
           const fee = sharesToBuy * comm;
-          if (cost + fee <= cash) {
-            cash -= cost + fee;
+          if (cash >= cost + fee) {
+            cash -= (cost + fee);
             totalComm += fee;
             portfolio[ticker] = (portfolio[ticker] || 0) + sharesToBuy;
-            tradeLog.push({
-              dateIdx: i, date: dates[i], action: 'BUY', ticker,
-              price, shares: sharesToBuy, amount: cost, fee,
-              mom: mom * 100
-            });
           }
         }
       }
-
-      // Record rebal
-      let pv = 0;
-      for (const [ticker, shares] of Object.entries(portfolio)) {
-        const p = prices[ticker][i];
-        if (p != null) pv += shares * p;
-      }
-      rebalHistory.push({
-        date: dates[i],
-        top5: top.map(x => `${x.ticker}(${(x.mom*100).toFixed(1)}%)`).join(', '),
-        cash: cash, portVal: pv, total: cash + pv,
-        totalTWD: (cash + pv) * fx,
-        growth: ((cash + pv) / capitalUSD - 1) * 100,
-      });
     }
 
-    // Monthly snapshot
-    let portVal = 0;
+    // Snapshot
+    let pv = 0;
     for (const [ticker, shares] of Object.entries(portfolio)) {
-      const p = prices[ticker][i];
-      if (p != null) portVal += shares * p;
+      if (HIST.prices[ticker][i] != null) pv += shares * HIST.prices[ticker][i];
     }
-    const total = cash + portVal;
-    monthlyHistory.push({
-      date: dates[i],
-      cash, portVal, total,
-      totalTWD: total * fx,
-      growth: (total / capitalUSD - 1) * 100,
-      holdings: Object.keys(portfolio).join(', ')
-    });
-  }
-
-  const finalTotal = monthlyHistory[monthlyHistory.length - 1].total;
-  const annReturn = (Math.pow(finalTotal / capitalUSD, 12 / n) - 1) * 100;
-  const buyHold = monthlyHistory[0].total; // should equal capitalUSD
-
-  // Max drawdown
-  let peak = capitalUSD;
-  let maxDD = 0;
-  for (const m of monthlyHistory) {
-    if (m.total > peak) peak = m.total;
-    const dd = (m.total - peak) / peak * 100;
-    if (dd < maxDD) maxDD = dd;
-  }
-
-  return {
-    monthly: monthlyHistory,
-    rebal: rebalHistory,
-    trades: tradeLog,
-    finalUSD: finalTotal,
-    finalTWD: finalTotal * fx,
-    totalReturn: (finalTotal / capitalUSD - 1) * 100,
-    annReturn,
-    totalComm,
-    maxDD,
-    nTrades: tradeLog.length,
-  };
-}
-
-function backtestQQQ(capitalUSD, fx) {
-  const dates = HIST.dates;
-  const qqq = HIST.qqq;
-  const n = dates.length;
-
-  const initP = qqq[0];
-  const shares = capitalUSD / initP;
-  const monthly = [];
-  let peak = capitalUSD;
-  let maxDD = 0;
-
-  for (let i = 0; i < n; i++) {
-    const p = qqq[i];
-    if (p == null) continue;
-    const total = shares * p;
+    const total = cash + pv;
     if (total > peak) peak = total;
     const dd = (total - peak) / peak * 100;
     if (dd < maxDD) maxDD = dd;
-    monthly.push({
-      date: dates[i], total, totalTWD: total * fx,
-      growth: (total / capitalUSD - 1) * 100
-    });
+    
+    monthlyHistory.push(total);
   }
 
-  const finalTotal = monthly[monthly.length - 1].total;
-  return {
-    monthly,
-    finalUSD: finalTotal,
-    finalTWD: finalTotal * fx,
-    totalReturn: (finalTotal / capitalUSD - 1) * 100,
-    annReturn: (Math.pow(finalTotal / capitalUSD, 12 / monthly.length) - 1) * 100,
-    totalComm: 0,
-    maxDD,
-    nTrades: 1,
+  const finalUSD = monthlyHistory[n - 1];
+  const totalReturn = (finalUSD / capitalUSD - 1) * 100;
+  const annReturn = (Math.pow(finalUSD / capitalUSD, 12 / n) - 1) * 100;
+
+  return { monthlyData: monthlyHistory, finalUSD, totalReturn, annReturn, maxDD, totalComm };
+}
+
+function backtestQQQ(capitalUSD) {
+  const qqq = HIST.qqq;
+  const shares = capitalUSD / qqq[0];
+  const monthlyData = [];
+  let peak = capitalUSD;
+  let maxDD = 0;
+
+  for (let i = 0; i < qqq.length; i++) {
+    const total = shares * qqq[i];
+    if (total > peak) peak = total;
+    const dd = (total - peak) / peak * 100;
+    if (dd < maxDD) maxDD = dd;
+    monthlyData.push(total);
+  }
+
+  const finalUSD = monthlyData[monthlyData.length - 1];
+  return { 
+    monthlyData, finalUSD, 
+    totalReturn: (finalUSD / capitalUSD - 1) * 100, 
+    annReturn: (Math.pow(finalUSD / capitalUSD, 12 / qqq.length) - 1) * 100,
+    maxDD, totalComm: 0 
   };
 }
 
-// ==========================================
-// RENDER RESULTS
-// ==========================================
-function renderResults(strat, qqq, freq, nPos, momWin, capitalTWD, capitalUSD, comm, fx) {
-  const freqLabel = { M:'月度再平衡', Q:'季度再平衡', SA:'半年再平衡' }[freq];
-
-  // Performance cards
-  const cards = document.getElementById('perfCards');
-  cards.innerHTML = `
-    ${perfCard(freqLabel, strat, '#00e676', 'var(--bg2)', 'var(--border)')}
-    ${perfCard('QQQ Buy & Hold', qqq, '#ff4757', 'var(--bg2)', 'var(--border)')}
-  `;
-
-  // Charts
-  renderCharts(strat, qqq, freqLabel);
-
-  // Detail tabs
-  renderDetailTabs(strat, qqq, freqLabel, freq);
-
+function renderBacktestResults(results) {
   document.getElementById('backtestResults').style.display = 'block';
-  document.getElementById('backtestEmpty').style.display = 'none';
-}
 
-function perfCard(title, data, color, bg, border) {
-  const vs = data.finalUSD;
-  const ret = data.totalReturn;
-  const retColor = ret >= 0 ? 'var(--green)' : 'var(--red)';
-  const retSign = ret >= 0 ? '+' : '';
+  // 1. Render Summary Table
+  let html = '';
+  results.sort((a,b) => b.totalReturn - a.totalReturn); // Sort by best performance
+  
+  for(const r of results) {
+    const isBaseline = r.label.includes('QQQ');
+    const rowStyle = isBaseline ? 'background:rgba(255,255,255,0.05); font-weight:bold;' : '';
+    html += `<tr style="${rowStyle}">
+      <td><span style="display:inline-block;width:10px;height:10px;background:${r.color};margin-right:8px;border-radius:2px;"></span>${r.label}</td>
+      <td class="num">$${r.finalUSD.toLocaleString('en',{maximumFractionDigits:0})}</td>
+      <td class="num" style="color:${r.totalReturn>=0?'var(--green)':'var(--red)'}">${r.totalReturn.toFixed(1)}%</td>
+      <td class="num">${r.annReturn.toFixed(1)}%</td>
+      <td class="num" style="color:var(--red)">${r.maxDD.toFixed(1)}%</td>
+      <td class="num">$${r.totalComm.toFixed(0)}</td>
+    </tr>`;
+  }
+  document.getElementById('summaryBody').innerHTML = html;
 
-  return `
-  <div class="metric-card" style="border-left:3px solid ${color}">
-    <div class="metric-card-title">${title}</div>
-    <div class="metric-row">
-      <span class="metric-key">最終資產 (USD)</span>
-      <span class="metric-val a">$${vs.toLocaleString('en', {minimumFractionDigits:2, maximumFractionDigits:2})}</span>
-    </div>
-    <div class="metric-row">
-      <span class="metric-key">最終資產 (TWD)</span>
-      <span class="metric-val">NT$${(data.finalTWD).toLocaleString('zh-TW', {maximumFractionDigits:0})}</span>
-    </div>
-    <div class="metric-row">
-      <span class="metric-key">總報酬率</span>
-      <span class="metric-val" style="color:${retColor}">${retSign}${ret.toFixed(2)}%</span>
-    </div>
-    <div class="metric-row">
-      <span class="metric-key">年化報酬率 (估算)</span>
-      <span class="metric-val" style="color:${data.annReturn>=0?'var(--green)':'var(--red)'}">${data.annReturn>=0?'+':''}${data.annReturn.toFixed(2)}%</span>
-    </div>
-    <div class="metric-row">
-      <span class="metric-key">最大回撤</span>
-      <span class="metric-val r">${data.maxDD.toFixed(2)}%</span>
-    </div>
-    <div class="metric-row">
-      <span class="metric-key">總交易次數</span>
-      <span class="metric-val">${data.nTrades.toLocaleString()}</span>
-    </div>
-    <div class="metric-row">
-      <span class="metric-key">總手續費 (USD)</span>
-      <span class="metric-val">$${data.totalComm.toFixed(2)}</span>
-    </div>
-  </div>`;
-}
-
-function renderCharts(strat, qqq, freqLabel) {
-  const labels = strat.monthly.map(m => m.date);
-
-  const stratData = strat.monthly.map(m => +m.total.toFixed(2));
-  const qqqData   = qqq.monthly.map(m => +m.total.toFixed(2));
+  // 2. Render Chart
+  const datasets = results.map(r => ({
+    label: r.label,
+    data: r.monthlyData.map(v => +v.toFixed(0)),
+    borderColor: r.color,
+    borderWidth: r.label.includes('QQQ') ? 1.5 : 2,
+    borderDash: r.label.includes('QQQ') ? [4,4] : [],
+    pointRadius: 0,
+    tension: 0.2
+  }));
 
   if (growthChart) growthChart.destroy();
-  if (returnChart) returnChart.destroy();
-
-  const chartOpts = (yLabel) => ({
-    responsive: true, maintainAspectRatio: false,
-    animation: { duration: 800, easing: 'easeInOutQuart' },
-    interaction: { mode: 'index', intersect: false },
-    plugins: {
-      legend: { display: false },
-      tooltip: {
-        backgroundColor: 'rgba(15,18,23,0.95)',
-        borderColor: 'rgba(30,37,48,1)',
-        borderWidth: 1,
-        titleColor: '#8b96a8',
-        bodyColor: '#e8edf5',
-        titleFont: { family: "'Space Mono', monospace", size: 11 },
-        bodyFont: { family: "'Space Mono', monospace", size: 11 },
-        callbacks: {
-          label: (ctx) => ` ${ctx.dataset.label}: $${ctx.parsed.y.toLocaleString('en',{maximumFractionDigits:2})}`
-        }
-      }
-    },
-    scales: {
-      x: {
-        grid: { color: 'rgba(30,37,48,0.6)' },
-        ticks: {
-          color: '#4a5568', font: { family:"'Space Mono'", size:10 },
-          maxTicksLimit: 12,
-          callback: (val, idx) => labels[idx] ? labels[idx].substring(0, 7) : ''
+  growthChart = new Chart(document.getElementById('growthChart'), {
+    type: 'line',
+    data: { labels: HIST.dates, datasets },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { labels: { color: '#8b96a8', font:{family:"'Space Mono'"} } },
+        tooltip: {
+          backgroundColor: 'rgba(15,18,23,0.95)', borderColor: 'rgba(30,37,48,1)', borderWidth: 1,
+          titleFont: { family: "'Space Mono'" }, bodyFont: { family: "'Space Mono'" },
+          callbacks: { label: (ctx) => ` ${ctx.dataset.label}: $${ctx.parsed.y.toLocaleString()}` }
         }
       },
-      y: {
-        grid: { color: 'rgba(30,37,48,0.6)' },
-        ticks: {
-          color: '#4a5568', font: { family:"'Space Mono'", size:10 },
-          callback: v => '$' + (v >= 1000 ? (v/1000).toFixed(0)+'K' : v.toFixed(0))
-        }
+      scales: {
+        x: { grid: { color: 'rgba(30,37,48,0.6)' }, ticks: { color: '#4a5568', font:{family:"'Space Mono'"} } },
+        y: { type:'logarithmic', grid: { color: 'rgba(30,37,48,0.6)' }, ticks: { color: '#4a5568', font:{family:"'Space Mono'"} } }
       }
     }
   });
-
-  growthChart = new Chart(document.getElementById('growthChart'), {
-    type: 'line',
-    data: {
-      labels,
-      datasets: [
-        { label: freqLabel, data: stratData,
-          borderColor: '#00e676', backgroundColor: 'rgba(0,230,118,0.06)',
-          borderWidth: 2, pointRadius: 0, fill: true, tension: 0.3 },
-        { label: 'QQQ B&H', data: qqqData,
-          borderColor: '#ff4757', backgroundColor: 'rgba(255,71,87,0.04)',
-          borderWidth: 1.5, pointRadius: 0, fill: true, tension: 0.3,
-          borderDash: [4,3] }
-      ]
-    },
-    options: chartOpts('USD')
-  });
-
-  const retStratData = strat.monthly.map(m => +m.growth.toFixed(2));
-  const retQQQData   = qqq.monthly.map(m => +m.growth.toFixed(2));
-
-  const retOpts = JSON.parse(JSON.stringify(chartOpts('return')));
-  retOpts.scales.y.ticks.callback = v => v.toFixed(0) + '%';
-  retOpts.plugins.tooltip.callbacks.label = (ctx) =>
-    ` ${ctx.dataset.label}: ${ctx.parsed.y >= 0?'+':''}${ctx.parsed.y.toFixed(2)}%`;
-
-  returnChart = new Chart(document.getElementById('returnChart'), {
-    type: 'line',
-    data: {
-      labels,
-      datasets: [
-        { label: freqLabel, data: retStratData,
-          borderColor: '#00e676', borderWidth: 2, pointRadius: 0, fill: false, tension: 0.3 },
-        { label: 'QQQ B&H', data: retQQQData,
-          borderColor: '#ff4757', borderWidth: 1.5, pointRadius: 0, fill: false, tension: 0.3,
-          borderDash: [4,3] }
-      ]
-    },
-    options: retOpts
-  });
-
-  // Legends
-  const mkLegend = (id, labels) => {
-    const colors = ['#00e676','#ff4757'];
-    document.getElementById(id).innerHTML = labels.map((l,i) =>
-      `<div class="legend-item"><div class="legend-dot" style="background:${colors[i]}"></div>${l}</div>`
-    ).join('');
-  };
-  mkLegend('chartLegend', [freqLabel, 'QQQ B&H']);
-  mkLegend('returnLegend', [freqLabel, 'QQQ B&H']);
-}
-
-function renderDetailTabs(strat, qqq, freqLabel, freq) {
-  const tabs = document.getElementById('detailTabs');
-  const panels = document.getElementById('detailPanels');
-
-  tabs.innerHTML = `
-    <button class="tab-btn active" onclick="switchTab(0,this)">調倉記錄 (${strat.rebal.length}筆)</button>
-    <button class="tab-btn" onclick="switchTab(1,this)">交易明細 (${strat.trades.length}筆)</button>
-    <button class="tab-btn" onclick="switchTab(2,this)">月度資產</button>
-    <button class="tab-btn" onclick="switchTab(3,this)">QQQ 月度</button>
-  `;
-
-  // Tab 0: Rebal history
-  const rebalRows = strat.rebal.map((r, i) => {
-    const bg = i % 2 === 0 ? 'background:rgba(255,255,255,0.02)' : '';
-    const gc = r.growth >= 0 ? 'var(--green)' : 'var(--red)';
-    return `<tr style="${bg}">
-      <td>${r.date}</td>
-      <td style="font-size:11px;color:var(--text2)">${r.top5}</td>
-      <td class="num">$${r.cash.toFixed(2)}</td>
-      <td class="num">$${r.portVal.toFixed(2)}</td>
-      <td class="num">$${r.total.toFixed(2)}</td>
-      <td class="num">NT$${r.totalTWD.toLocaleString('zh-TW',{maximumFractionDigits:0})}</td>
-      <td class="num" style="color:${gc};font-weight:700">${r.growth>=0?'+':''}${r.growth.toFixed(2)}%</td>
-    </tr>`;
-  }).join('');
-
-  // Tab 1: Trades
-  const tradeRows = strat.trades.map((t, i) => {
-    const isBuy = t.action === 'BUY';
-    const bg = isBuy ? 'rgba(0,230,118,0.04)' : 'rgba(255,71,87,0.04)';
-    const ac = isBuy ? 'var(--green)' : 'var(--red)';
-    const momStr = t.mom != null ? `${t.mom.toFixed(2)}%` : '—';
-    return `<tr style="background:${bg}">
-      <td>${t.date}</td>
-      <td style="color:${ac};font-weight:700;font-family:var(--mono)">${t.action}</td>
-      <td style="font-weight:600">${t.ticker}</td>
-      <td class="num">${momStr}</td>
-      <td class="num">$${t.price.toFixed(4)}</td>
-      <td class="num">${t.shares.toFixed(4)}</td>
-      <td class="num">$${t.amount.toFixed(2)}</td>
-      <td class="num" style="color:var(--red2)">$${t.fee.toFixed(4)}</td>
-      <td class="num" style="color:${isBuy?'var(--red)':'var(--green)'}">${isBuy?'-':'+'}$${(isBuy?t.amount+t.fee:t.amount-t.fee).toFixed(2)}</td>
-    </tr>`;
-  }).join('');
-
-  // Tab 2: Monthly
-  const monthRows = strat.monthly.map((m, i) => {
-    const bg = i % 2 === 0 ? 'background:rgba(255,255,255,0.02)' : '';
-    const gc = m.growth >= 0 ? 'var(--green)' : 'var(--red)';
-    return `<tr style="${bg}">
-      <td>${m.date}</td>
-      <td style="font-size:11px;color:var(--text3)">${m.holdings}</td>
-      <td class="num">$${m.cash.toFixed(2)}</td>
-      <td class="num">$${m.portVal.toFixed(2)}</td>
-      <td class="num">$${m.total.toFixed(2)}</td>
-      <td class="num">NT$${m.totalTWD.toLocaleString('zh-TW',{maximumFractionDigits:0})}</td>
-      <td class="num" style="color:${gc};font-weight:700">${m.growth>=0?'+':''}${m.growth.toFixed(2)}%</td>
-    </tr>`;
-  }).join('');
-
-  // Tab 3: QQQ monthly
-  const qqqRows = qqq.monthly.map((m, i) => {
-    const bg = i % 2 === 0 ? 'background:rgba(255,255,255,0.02)' : '';
-    const gc = m.growth >= 0 ? 'var(--green)' : 'var(--red)';
-    return `<tr style="${bg}">
-      <td>${m.date}</td>
-      <td class="num">$${m.total.toFixed(2)}</td>
-      <td class="num">NT$${m.totalTWD.toLocaleString('zh-TW',{maximumFractionDigits:0})}</td>
-      <td class="num" style="color:${gc};font-weight:700">${m.growth>=0?'+':''}${m.growth.toFixed(2)}%</td>
-    </tr>`;
-  }).join('');
-
-  const tableStyle = 'style="width:100%;border-collapse:collapse"';
-  const thStyle = 'style="padding:9px 14px;text-align:left;font-family:var(--mono);font-size:11px;color:var(--text3);letter-spacing:1px;border-bottom:1px solid var(--border);background:var(--bg3);position:sticky;top:0;z-index:5"';
-  const thNum = `style="padding:9px 14px;text-align:right;font-family:var(--mono);font-size:11px;color:var(--text3);letter-spacing:1px;border-bottom:1px solid var(--border);background:var(--bg3);position:sticky;top:0;z-index:5"`;
-
-  panels.innerHTML = `
-    <div class="tab-panel active" id="tabPanel0">
-      <div style="overflow:auto;max-height:400px">
-        <table ${tableStyle}>
-          <thead><tr>
-            <th ${thStyle}>日期</th><th ${thStyle}>前${strat.rebal[0]?.top5?.split(',').length||5}名 (動能)</th>
-            <th ${thNum}>現金(USD)</th><th ${thNum}>股票市值</th><th ${thNum}>總資產(USD)</th>
-            <th ${thNum}>總資產(TWD)</th><th ${thNum}>成長率</th>
-          </tr></thead>
-          <tbody>${rebalRows}</tbody>
-        </table>
-      </div>
-    </div>
-
-    <div class="tab-panel" id="tabPanel1">
-      <div class="annotation-box" style="margin:12px 16px 0">
-        <strong>交易明細說明：</strong>
-        淨金額 = 買入時為 -(金額+手續費)，賣出時為 +(金額-手續費)
-      </div>
-      <div style="overflow:auto;max-height:400px">
-        <table ${tableStyle}>
-          <thead><tr>
-            <th ${thStyle}>日期</th><th ${thStyle}>動作</th><th ${thStyle}>標的</th>
-            <th ${thNum}>動能</th><th ${thNum}>成交價</th><th ${thNum}>股數</th>
-            <th ${thNum}>金額(USD)</th><th ${thNum}>手續費</th><th ${thNum}>淨金額</th>
-          </tr></thead>
-          <tbody>${tradeRows}</tbody>
-        </table>
-      </div>
-    </div>
-
-    <div class="tab-panel" id="tabPanel2">
-      <div style="overflow:auto;max-height:400px">
-        <table ${tableStyle}>
-          <thead><tr>
-            <th ${thStyle}>日期</th><th ${thStyle}>持有標的</th>
-            <th ${thNum}>現金(USD)</th><th ${thNum}>股票市值</th><th ${thNum}>總資產(USD)</th>
-            <th ${thNum}>總資產(TWD)</th><th ${thNum}>成長率</th>
-          </tr></thead>
-          <tbody>${monthRows}</tbody>
-        </table>
-      </div>
-    </div>
-
-    <div class="tab-panel" id="tabPanel3">
-      <div style="overflow:auto;max-height:400px">
-        <table ${tableStyle}>
-          <thead><tr>
-            <th ${thStyle}>日期</th>
-            <th ${thNum}>總資產(USD)</th><th ${thNum}>總資產(TWD)</th><th ${thNum}>成長率</th>
-          </tr></thead>
-          <tbody>${qqqRows}</tbody>
-        </table>
-      </div>
-    </div>
-  `;
-}
-
-function switchTab(idx, btn) {
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-  btn.classList.add('active');
-  const panel = document.getElementById('tabPanel' + idx);
-  if (panel) panel.classList.add('active');
-}
-
-function setLoading(show, text) {
-  const ol = document.getElementById('loadingOverlay');
-  if (text) document.getElementById('loadingText').textContent = text;
-  ol.classList.toggle('show', show);
 }
 
 // ==========================================
-// BOOT
+// GIANT MATRIX RENDERER (PERFORMANCE OPTIMIZED)
 // ==========================================
+function renderGiantMatrix() {
+  // To avoid UI freeze, we construct a giant HTML string and inject it.
+  const dates = HIST.dates;
+  const tickers = HIST.tickers;
+  const n = dates.length;
+  
+  // Pre-calculate the entire matrix string
+  let html = '<table class="matrix-table"><thead><tr><th>Date</th>';
+  for(const t of tickers) html += `<th>${t}</th>`;
+  html += '</tr></thead><tbody>';
+
+  // We loop dates backward (newest first)
+  for(let i = n - 1; i >= 60; i--) { // need at least 60 days back (approx 2 idx)
+    html += `<tr><td>${dates[i].substring(0,7)}</td>`;
+    
+    const pastIdx = getPastIdx(i, 60);
+    
+    // Find top 5 for this row to highlight
+    let rowScores = [];
+    for(let j=0; j<tickers.length; j++) {
+      const t = tickers[j];
+      if(isInIdx(t, i)) {
+        const cp = HIST.prices[t][i];
+        const pp = HIST.prices[t][pastIdx];
+        if(cp != null && pp != null && pp > 0) {
+          rowScores.push({ idx: j, mom: cp/pp - 1 });
+        }
+      }
+    }
+    rowScores.sort((a,b) => b.mom - a.mom);
+    const top5Set = new Set(rowScores.slice(0,5).map(x => x.idx));
+
+    // Build row cells
+    for(let j=0; j<tickers.length; j++) {
+      const t = tickers[j];
+      if(!isInIdx(t, i)) {
+        html += `<td class="cell-out">-</td>`;
+      } else {
+        const cp = HIST.prices[t][i];
+        const pp = HIST.prices[t][pastIdx];
+        if(cp == null || pp == null || pp === 0) {
+           html += `<td>-</td>`;
+        } else {
+           const mom = (cp/pp - 1) * 100;
+           const isTop5 = top5Set.has(j);
+           const cls = isTop5 ? 'cell-top5' : (mom >= 0 ? 'cell-pos' : 'cell-neg');
+           html += `<td class="${cls}">${mom.toFixed(1)}%</td>`;
+        }
+      }
+    }
+    html += '</tr>';
+  }
+  html += '</tbody></table>';
+
+  document.getElementById('matrixContainer').innerHTML = html;
+}
+
+// Boot
 init();
 </script>
 </body>
