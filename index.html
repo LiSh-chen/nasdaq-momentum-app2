@@ -457,23 +457,22 @@ async function init() {
   }
 }
 
-// 根據 JSON 事件，動態重建 100 檔成份股陣列
+// 根據歷史異動事件，動態重建 100 檔成份股陣列
 function generateMembership(tickers, numPeriods, eventsObj) {
   const mem = {};
   for (const t of tickers) {
     mem[t] = [];
-    let state = true; // 預設都在指數內
     const ev = eventsObj[t];
-    if (ev) {
-      let firstAdd = ev.add.length > 0 ? Math.min(...ev.add) : Infinity;
-      let firstDrop = ev.drop.length > 0 ? Math.min(...ev.drop) : Infinity;
-      // 若第一個事件是加入，代表初始不在指數內
-      if (firstAdd < firstDrop) state = false; 
-    }
+    
+    // REQUIREMENT 修正：根據 initial 標記決定起始狀態
+    let state = (ev && ev.initial === true); 
+
     for (let i = 0; i < numPeriods; i++) {
       if (ev) {
-        if (ev.add.includes(i)) state = true;
-        if (ev.drop.includes(i)) state = false;
+        // 如果該 Index 有加入事件，狀態變為 true
+        if (ev.add && ev.add.includes(i)) state = true;
+        // 如果該 Index 有剔除事件，狀態變為 false
+        if (ev.drop && ev.drop.includes(i)) state = false;
       }
       if (state) mem[t].push(i);
     }
